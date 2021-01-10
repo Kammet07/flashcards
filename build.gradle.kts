@@ -35,9 +35,10 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 
-    implementation("org.mariadb.jdbc:mariadb-java-client:2.6.0")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.mariadb.jdbc:mariadb-java-client:2.6.0")
+    implementation("mysql:mysql-connector-java:5.1.48")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")

@@ -1,8 +1,6 @@
 package com.kammet.flashcards.backend
 
 import io.ktor.http.*
-import io.ktor.features.*
-import org.slf4j.event.*
 import kotlin.test.*
 import io.ktor.server.testing.*
 
