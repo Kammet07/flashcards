@@ -16,24 +16,30 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
 
-    var db = connectToDb()
+    connectToDb()
 
     transaction {
-        SchemaUtils.create(Users)
+        SchemaUtils.createDatabase("test")
+    }
 
-        Users.insert {
-            it[Users.username] = "Kammet"
-            it[Users.mail] = "somedude@mail.com"
-            it[Users.pass] = "test123"
-            it[Users.role] = false
-        }
+    connectToDb("test")
 
-        Users.insert {
-            it[Users.username] = "Kammet"
-            it[Users.mail] = "someguy@mail.com"
-            it[Users.pass] = "test123"
-            it[Users.role] = true
-        }
+    transaction {
+//        SchemaUtils.create(Users)
+//
+//        Users.insert {
+//            it[Users.username] = "Kammet"
+//            it[Users.mail] = "somedude@mail.com"
+//            it[Users.pass] = "test123"
+//            it[Users.role] = false
+//        }
+//
+//        Users.insert {
+//            it[Users.username] = "admin"
+//            it[Users.mail] = "someguy@mail.com"
+//            it[Users.pass] = "test123"
+//            it[Users.role] = true
+//        }
     }
 
     install(Routing) {
@@ -61,16 +67,16 @@ fun Application.module(testing: Boolean = false) {
 }
 
 fun connectToDb(dbName: String? = null): Database = Database.connect(
-    url = "jdbc:mysql://127.0.0.1:3306/${dbName.orEmpty()}",
-    user = "card",
-    password = "flashcard135",
-    driver = "org.mariadb.jdbc.Driver"
+    "jdbc:mysql://127.0.0.1:3306/${dbName.orEmpty()}",
+    "org.mariadb.jdbc.Driver",
+    "card",
+    "flashcards135"
 )
 
-data class User(val id: Int? = null, val name: String, val pass: String, val mail: String, val role: Boolean)
+data class User(val id: Int? = null, val username: String, val pass: String, val mail: String, val role: Boolean)
 
 object Users : Table() {
-    val id: Column<Int> = integer("id").autoIncrement().uniqueIndex()
+    val id: Column<Int> = integer("id").autoIncrement()
     val username: Column<String> = varchar("username", 20).uniqueIndex()
     val pass: Column<String> = varchar("pass", 255)
     val mail: Column<String> = varchar("mail", 320).uniqueIndex()
@@ -81,7 +87,7 @@ object Users : Table() {
     fun toUser(row: ResultRow): User =
         User(
             id = row[Users.id],
-            name = row[Users.username],
+            username = row[Users.username],
             pass = row[Users.pass],
             mail = row[Users.mail],
             role = row[Users.role]
