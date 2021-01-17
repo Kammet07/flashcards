@@ -25,20 +25,20 @@ fun Application.module(testing: Boolean = false) {
     connectToDb("test")
 
     transaction {
-//        SchemaUtils.create(Users)
-//
-//        Users.insert {
-//            it[Users.username] = "Kammet"
-//            it[Users.mail] = "somedude@mail.com"
-//            it[Users.pass] = "test123"
-//            it[Users.role] = false
+        addLogger(StdOutSqlLogger)
+
+        SchemaUtils.createMissingTablesAndColumns(*entities)
+
+//        UserEntity.new {
+//            username = "vojtando"
+//            password = "rshnuydeirtdhuyioftpgdhnlqfpuyne"
+//            mail = "vojtando@mail.afrika"
 //        }
 //
-//        Users.insert {
-//            it[Users.username] = "admin"
-//            it[Users.mail] = "someguy@mail.com"
-//            it[Users.pass] = "test123"
-//            it[Users.role] = true
+//        UserEntity.new {
+//            username = "maxiiiik"
+//            password = "nseioradfglj8493q"
+//            mail = "maksimilian@jando.fun"
 //        }
     }
 
@@ -46,7 +46,9 @@ fun Application.module(testing: Boolean = false) {
         route("/users") {
             get("/") {
                 val users = transaction {
-                    Users.selectAll().map { Users.toUser(it) }
+                    UserEntity.all().map {
+                        it.toUser()
+                    }
                 }
                 call.respond(users)
             }
@@ -64,6 +66,10 @@ fun Application.module(testing: Boolean = false) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/") }
     }
+
+    install(StatusPages) {
+
+    }
 }
 
 fun connectToDb(dbName: String? = null): Database = Database.connect(
@@ -73,24 +79,12 @@ fun connectToDb(dbName: String? = null): Database = Database.connect(
     "flashcards135"
 )
 
-data class User(val id: Int? = null, val username: String, val pass: String, val mail: String, val role: Boolean)
+data class User(val id: Long, val username: String, val password: String, val mail: String)
 
-object Users : Table() {
-    val id: Column<Int> = integer("id").autoIncrement()
-    val username: Column<String> = varchar("username", 20).uniqueIndex()
-    val pass: Column<String> = varchar("pass", 255)
-    val mail: Column<String> = varchar("mail", 320).uniqueIndex()
-    val role: Column<Boolean> = bool("role")
-
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
-
-    fun toUser(row: ResultRow): User =
-        User(
-            id = row[Users.id],
-            username = row[Users.username],
-            pass = row[Users.pass],
-            mail = row[Users.mail],
-            role = row[Users.role]
-
-        )
-}
+fun UserEntity.toUser(): User =
+    User(
+        id = id.value,
+        username = username,
+        password = password,
+        mail = mail
+    )
