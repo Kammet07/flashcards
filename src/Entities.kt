@@ -13,15 +13,19 @@ class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var mail by Table.mail
 
     object Table : LongIdTable("users") {
-        val username = varchar("username", 20).uniqueIndex()
-        val password = varchar("password", 255)
-        val mail = varchar("mail", 320).uniqueIndex()
+        const val MAX_USERNAME_LENGTH = 20
+        const val MAX_PASSWORD_LENGTH = 255
+        const val MAX_MAIL_LENGTH = 320
+
+        val username = varchar("username", MAX_USERNAME_LENGTH).uniqueIndex()
+        val password = varchar("password", MAX_PASSWORD_LENGTH)
+        val mail = varchar("mail", MAX_MAIL_LENGTH).uniqueIndex()
 
         override val primaryKey: PrimaryKey = PrimaryKey(id)
     }
 
     companion object : EntityClass<Long, UserEntity>(Table) {
-
+        fun findByUsername(username: String) = find { Table.username eq username }.singleOrNull()
     }
 }
 
@@ -31,7 +35,9 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var public by Table.public
 
     object Table : LongIdTable("collections") {
-        val category = varchar("category", 255)
+        const val MAX_CATEGORY_LENGTH = 255
+
+        val category = varchar("category", MAX_CATEGORY_LENGTH)
         val public = bool("public")
         val creatorId = long("creator_id").references(UserEntity.Table.id)
 
@@ -50,15 +56,17 @@ class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var collectionId by Table.collectionId
 
     object Table : LongIdTable("flashcards") {
-        val term = varchar("term", 255)
-        val definition = varchar("definition", 255)
+        const val MAX_TERM_LENGTH = 255
+        const val MAX_DEFINITION_LENGTH = 255
+
+        val term = varchar("term", MAX_TERM_LENGTH)
+        val definition = varchar("definition", MAX_DEFINITION_LENGTH)
         val collectionId = long("collection_id").references(CollectionEntity.Table.id)
 
         override val primaryKey: PrimaryKey = PrimaryKey(id)
     }
 
-
     companion object : EntityClass<Long, FlashcardEntity>(Table) {
-
+        fun findByCollectionId(collectionId: Long) = find { Table.collectionId eq collectionId }.toList()
     }
 }
