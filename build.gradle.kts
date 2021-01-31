@@ -33,6 +33,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-jackson:$ktor_version")
     implementation("io.ktor:ktor-locations:$ktor_version")
+    implementation("org.hibernate.validator:hibernate-validator:6.1.1.Final")
+
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 

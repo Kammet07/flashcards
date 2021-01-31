@@ -12,50 +12,62 @@ import io.ktor.locations.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
+//runs application
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-@Suppress("unused") // Referenced in application.conf
+//application
+@Suppress("unused") //Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+    //connection to mariadb >  >
     connectToDb()
+    //if doesn't exist, creates schema
     transaction {
         SchemaUtils.createDatabase("test")
     }
+    //connects to created/existing db
     connectToDb("test")
+    //transactions in created db
     transaction {
+        //creates missing tables
         SchemaUtils.createMissingTablesAndColumns(*entities)
 
-//        UserEntity.new {
-//            username = "vojtando"
-//            password = "rshnuydeirtdhuyioftpgdhnlqfpuyne"
-//            mail = "vojtando@mail.afrika"
-//        }
-//
-//        UserEntity.new {
-//            username = "maxiiiik"
-//            password = "nseioradfglj8493q"
-//            mail = "maksimilian@jando.fun"
-//        }
+        //test
+        /*
+        UserEntity.new {
+            username = "vojtando"
+            password = "rshnuydeirtdhuyioftpgdhnlqfpuyne"
+            mail = "vojtando@mail.afrika"
+        }
+
+        UserEntity.new {
+            username = "maxiiiik"
+            password = "nseioradfglj8493q"
+            mail = "maksimilian@jando.fun"
+        }
 
         CollectionEntity.new {
             category = "test"
             public = false
-            creatorId = 3
+            creatorId = 7
         }
 
         FlashcardEntity.new {
             term = "hello"
             definition = "привет"
-            collectionId = 1
+            collectionId = 7
         }
 
         FlashcardEntity.new {
             term = "welcome"
             definition = "vitám"
-            collectionId = 1
+            collectionId = 7
         }
+
+        */
     }
 
+    //basic routing - test
     install(Routing) {
         route("/users") {
             get("/") {
@@ -73,12 +85,14 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
+    //sets jackson as content negotiator
     install(ContentNegotiation) {
         jackson {
 
         }
     }
 
+    //logging while running
     install(CallLogging) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/") }

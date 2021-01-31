@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.id.LongIdTable
 
 val entities = arrayOf(UserEntity.Table, CollectionEntity.Table, FlashcardEntity.Table)
 
+// exposed user entity
 class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var username by Table.username
     var password by Table.password
@@ -29,6 +30,7 @@ class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
     }
 }
 
+// exposed collection entity
 class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var category by Table.category
     var creatorId by Table.creatorId
@@ -49,7 +51,7 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
     }
 }
 
-
+// exposed flashcard entity
 class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var term by Table.term
     var definition by Table.definition

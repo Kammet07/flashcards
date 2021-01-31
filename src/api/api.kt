@@ -5,6 +5,6 @@ import io.ktor.routing.*
 
 fun Application.apiRouting() = routing {
     route("/api") {
-
+        userRoutes()
     }
 }
