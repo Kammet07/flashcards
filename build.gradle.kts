@@ -31,10 +31,8 @@ dependencies {
     implementation("io.ktor:ktor-server-core:$ktor_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("io.ktor:ktor-jackson:$ktor_version")
+    implementation("io.ktor:ktor-gson:$ktor_version")
     implementation("io.ktor:ktor-locations:$ktor_version")
-    implementation("org.hibernate.validator:hibernate-validator:6.1.1.Final")
-
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 
@@ -43,6 +41,11 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.mariadb.jdbc:mariadb-java-client:2.6.0")
     implementation("mysql:mysql-connector-java:5.1.48")
+
+    implementation("org.mindrot:jbcrypt:0.4")
+    implementation("org.hibernate.validator:hibernate-validator:6.1.1.Final")
+    implementation("org.glassfish:javax.el:3.0.0")
+
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
