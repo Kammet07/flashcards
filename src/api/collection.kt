@@ -15,8 +15,9 @@ import javax.validation.constraints.Size
 @KtorExperimentalLocationsAPI
 @Location("/collection")
 class CollectionLocation {
-    @Location("/{id}")
-    data class Detail(val id: Long, val collectionLocation: CollectionLocation)
+    @Location("/{collectionId}")
+
+    data class Detail(val collectionId: Long, val collectionLocation: CollectionLocation)
 }
 
 @KtorExperimentalLocationsAPI
@@ -110,10 +111,12 @@ fun Route.collectionRoutes() {
 
         /**
          * delete collection with all connected flashcards
+         *
+         * TODO: implement
          */
-//        delete<CollectionLocation.Detail> {
-//
-//        }
+        delete<CollectionLocation.Detail> {
+
+        }
     }
 
     /**
@@ -136,4 +139,6 @@ fun Route.collectionRoutes() {
                 })
         }
     }
+
+
 }

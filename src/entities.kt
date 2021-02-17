@@ -63,6 +63,8 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
 
         fun wasCreatedByUser(id: Long, creatorId: Long) =
             find { (Table.id eq id).and(Table.creatorId eq creatorId) }.empty().not()
+
+        fun isPublic(id: Long) = find { Table.id eq id }.singleOrNull()?.public
     }
 }
 
@@ -73,11 +75,10 @@ class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var collectionId by Table.collectionId
 
     object Table : LongIdTable("flashcards") {
-        const val MAX_TERM_LENGTH = 255
-        const val MAX_DEFINITION_LENGTH = 255
+        const val MAX_TEXT_LENGTH = 255
 
-        val term = varchar("term", MAX_TERM_LENGTH)
-        val definition = varchar("definition", MAX_DEFINITION_LENGTH)
+        val term = varchar("term", MAX_TEXT_LENGTH)
+        val definition = varchar("definition", MAX_TEXT_LENGTH)
         val collectionId = long("collection_id").references(CollectionEntity.Table.id)
 
         override val primaryKey: PrimaryKey = PrimaryKey(id)

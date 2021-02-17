@@ -15,8 +15,8 @@ import javax.validation.constraints.Size
 @KtorExperimentalLocationsAPI
 @Location("/user")
 class UserLocation {
-    @Location("/{id}")
-    data class Detail(val id: Long, val userLocation: UserLocation)
+    @Location("/{userId}")
+    data class Detail(val userId: Long, val userLocation: UserLocation)
 }
 
 data class UserLoginModel(val username: String, val password: String)
@@ -107,7 +107,7 @@ fun Route.userRoutes() {
      * else responds with code 404
      */
     get<UserLocation.Detail> { location ->
-        val user = transaction { UserEntity.findById(location.id) }
+        val user = transaction { UserEntity.findById(location.userId) }
         call.respondOr404(user?.asViewModel())
     }
 
@@ -116,23 +116,23 @@ fun Route.userRoutes() {
      */
     authenticate {
         delete<UserLocation.Detail> { location ->
-            call.forbiddenIf { call.identity?.id != location.id }
+            call.forbiddenIf { call.identity?.id != location.userId }
             transaction {
-                UserEntity.Table.deleteIgnoreWhere { UserEntity.Table.id eq location.id }
+                UserEntity.Table.deleteIgnoreWhere { UserEntity.Table.id eq location.userId }
                 call.identity = null
             }
             call.respond("removed")
         }
 
         put<UserLocation.Detail> { location ->
-            call.forbiddenIf { call.identity?.id != location.id }
+            call.forbiddenIf { call.identity?.id != location.userId }
             val model = call.receive<IUserModel.Edit>().also { it.validate() }
             val user = transaction {
                 when {
                     UserEntity.existsByUsername(model.username) || !isEmailValid(model.mail!!) || UserEntity.existsByMail(
                         model.mail
                     ) -> null
-                    else -> UserEntity.findById(location.id)?.also { it.valuesFrom(model) }
+                    else -> UserEntity.findById(location.userId)?.also { it.valuesFrom(model) }
                 }
             }
             when (user) {
