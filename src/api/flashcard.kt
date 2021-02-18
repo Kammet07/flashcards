@@ -2,6 +2,7 @@ package com.kammet.flashcards.backend.api
 
 import com.kammet.flashcards.backend.CollectionEntity
 import com.kammet.flashcards.backend.FlashcardEntity
+import com.kammet.flashcards.backend.forbiddenIf
 import com.kammet.flashcards.backend.validate
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -10,6 +11,7 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.validation.constraints.Size
 
@@ -139,9 +141,21 @@ fun Route.flashcardRoutes() {
             }
         }
 
-        // TODO: implement
-        delete<FlashcardLocation.Detail> {
-
+        delete<FlashcardLocation.Detail> { location ->
+            when (FlashcardEntity.findById(location.flashcardId)) {
+                null -> {
+                    call.response.status(HttpStatusCode.NotFound)
+                    call.respond("entity not found")
+                }
+                else -> {
+                    val collection = CollectionEntity.findById(location.collectionId)
+                    call.forbiddenIf { call.identity?.id != collection?.creatorId }
+                    transaction {
+                        FlashcardEntity.Table.deleteIgnoreWhere { FlashcardEntity.Table.id eq location.flashcardId }
+                    }
+                    call.respond("removed")
+                }
+            }
         }
     }
 }

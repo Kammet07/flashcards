@@ -10,13 +10,10 @@ import io.ktor.gson.*
 import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
 import io.ktor.sessions.*
 import io.ktor.util.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.Level
 
@@ -40,63 +37,6 @@ fun Application.module() {
         //creates missing tables
         SchemaUtils.createMissingTablesAndColumns(*entities)
     }
-
-
-    //test
-    /*
-    transaction {
-        UserEntity.new {
-            username = "vojtando"
-            password = "rshnuydeirtdhuyioftpgdhnlqfpuyne"
-            mail = "vojtando@mail.afrika"
-        }
-
-        UserEntity.new {
-            username = "maxiiiik"
-            password = "nseioradfglj8493q"
-            mail = "maksimilian@jando.fun"
-        }
-    }
-
-    transaction {
-        CollectionEntity.new {
-            category = "test"
-            public = false
-            creatorId = UserEntity.findByUsername("vojtando")?.toUser()?.id ?: 1
-        }
-    }
-
-    transaction {
-        FlashcardEntity.new {
-            term = "hello"
-            definition = "привет"
-            collectionId =
-                CollectionEntity.findByCreatorId(UserEntity.findByUsername("vojtando")?.toUser()?.id ?: 1)?.toCollection()?.id ?: 1
-        }
-
-        FlashcardEntity.new {
-            term = "welcome"
-            definition = "vitám"
-            collectionId =
-                CollectionEntity.findByCreatorId(UserEntity.findByUsername("vojtando")?.toUser()?.id ?: 1)?.toCollection()?.id ?: 1
-        }
-
-                FlashcardEntity.new {
-            term = "드림캐쳐"
-            definition = "dreamcather"
-            collectionId =
-                CollectionEntity.findByCreatorId(UserEntity.findByUsername("vojtando")?.toUser()?.id ?: 1)?.toCollection()?.id ?: 1
-        }
-
-                FlashcardEntity.new {
-            term = "قبض على"
-            definition = "catch"
-            collectionId =
-                CollectionEntity.findByCreatorId(UserEntity.findByUsername("vojtando")?.toUser()?.id ?: 1)?.toCollection()?.id ?: 1
-        }
-
-    }
-     */
 
     //sets content negotiator
     install(ContentNegotiation) {
@@ -139,6 +79,7 @@ fun Application.module() {
 
 }
 
+// TODO: move to property file?
 fun connectToDb(dbName: String? = null): Database = Database.connect(
     "jdbc:mysql://127.0.0.1:3306/${dbName.orEmpty()}?characterEncoding=utf8&useUnicode=true",
     "org.mariadb.jdbc.Driver",

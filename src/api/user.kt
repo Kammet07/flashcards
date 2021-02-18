@@ -10,6 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 
 @KtorExperimentalLocationsAPI
@@ -32,6 +33,7 @@ interface IUserModel {
         @Size(min = 5, max = UserEntity.Table.MAX_PASSWORD_LENGTH)
         override val password: String?,
         @Size(min = 5, max = UserEntity.Table.MAX_MAIL_LENGTH)
+        @Email
         override val mail: String?
     ) : IUserModel
 
@@ -145,4 +147,3 @@ fun Route.userRoutes() {
         }
     }
 }
-

@@ -30,9 +30,6 @@ class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
         fun findByUsername(username: String) = find { Table.username eq username }.singleOrNull()
         fun existsByUsername(username: String) = find { Table.username eq username }.empty().not()
         fun existsByMail(mail: String) = find { Table.mail eq mail }.empty().not()
-
-//        TODO: fix with left join
-//        fun findCreatedCollections(userId: Long) = find { CollectionEntity.Table.creatorId eq userId }.singleOrNull()
     }
 }
 
@@ -55,8 +52,6 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
     companion object : EntityClass<Long, CollectionEntity>(Table) {
         fun findByCreatorId(creatorId: Long) = find { Table.creatorId eq creatorId }.toList()
         fun findPublic() = find { Table.public eq true }.toList()
-        fun findUserPrivate(creatorId: Long) =
-            find { (Table.public eq false).and(Table.creatorId eq creatorId) }.toList()
 
         fun findUserPublic(creatorId: Long) =
             find { (Table.public eq true).and(Table.creatorId eq creatorId) }.toList()
@@ -64,7 +59,6 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
         fun wasCreatedByUser(id: Long, creatorId: Long) =
             find { (Table.id eq id).and(Table.creatorId eq creatorId) }.empty().not()
 
-        fun isPublic(id: Long) = find { Table.id eq id }.singleOrNull()?.public
     }
 }
 

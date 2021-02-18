@@ -1,5 +1,6 @@
 package com.kammet.flashcards.backend
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import io.ktor.application.*
 import io.ktor.http.*
@@ -55,7 +56,7 @@ suspend fun ApplicationCall.respondJson(block: () -> Any? = { "" }) = respondTex
     gson.toJson(block())
 }
 
-val gson = GsonBuilder().apply {
+val gson: Gson = GsonBuilder().apply {
     setDateFormat(DateFormat.LONG)
     setPrettyPrinting()
 }.create()
