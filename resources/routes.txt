@@ -1,0 +1,9 @@
+/api
+    /user
+        /{userId}
+            /collections
+    /authentication
+    /collection
+        /{collectionId}
+    /flashcard
+        /{collectionId}/{flashcardId}
