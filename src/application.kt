@@ -16,6 +16,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.Level
+import java.time.Duration
 
 //runs application
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -77,6 +78,9 @@ fun Application.module() {
         }
     }
 
+    install(CORS) {
+        anyHost()
+    }
 }
 
 // TODO: move to property file?
