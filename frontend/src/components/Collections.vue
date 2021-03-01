@@ -1,8 +1,9 @@
 <template>
-    <div id="collections">
-        <ul v-if="posts && posts.length">
-            <li v-for="post of posts" v-bind:key="post.id">
-                <p>{{ post.username }}</p>
+    <div class="content" id="collections">
+        <h2>Collections</h2>
+        <ul class="" v-if="collections && collections.length">
+            <li v-for="collection of collections" v-bind:key="collection.id">
+                <p>{{ collection.category }} by {{ collection.creatorId }}</p>
             </li>
         </ul>
 
@@ -16,13 +17,14 @@
 
 <script>
 import axios from 'axios';
+import {url} from "@/assets/mixins";
 
 export default {
     name: "Collections",
 
     data() {
         return {
-            posts: [],
+            collections: [],
             errors: []
         }
     },
@@ -30,8 +32,8 @@ export default {
     // Fetches posts when the component is created.
     async created() {
         try {
-            const response = await axios.get(`http://localhost:8080/api/collection`)
-            this.posts = response.data
+            const response = await axios.get(`http://${url}:8080/api/collection`)
+            this.collections = response.data
         } catch (e) {
             this.errors.push(e)
         }

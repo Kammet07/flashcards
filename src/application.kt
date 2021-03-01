@@ -64,21 +64,33 @@ fun Application.module() {
         filter { call -> call.request.path().startsWith("/") }
     }
 
-    install(StatusPages) {
-
-    }
-
+    install(StatusPages)
     install(Locations)
     apiRouting()
+    frontendRouting()
 
+    val secretKey = hex("1fc2fd197f4e4c1eedc908cf4f54c070")
     install(Sessions) {
         cookie<UserIdentity>("LOGIN_SESSION") {
-            val secretKey = hex("1fc2fd197f4e4c1eedc908cf4f54c070")
+            cookie.path = "/"
+            cookie.maxAgeInSeconds = Duration.ofDays(1).seconds
+            cookie.httpOnly = true
+            cookie.extensions["SameSite"] = "lax"
             transform(SessionTransportTransformerMessageAuthentication(secretKey))
         }
     }
 
     install(CORS) {
+        method(HttpMethod.Options)
+        method(HttpMethod.Get)
+        method(HttpMethod.Post)
+        method(HttpMethod.Put)
+        method(HttpMethod.Delete)
+        header(HttpHeaders.AccessControlAllowHeaders)
+        header(HttpHeaders.ContentType)
+        header(HttpHeaders.AccessControlAllowOrigin)
+        header(HttpHeaders.Cookie)
+        allowCredentials = true
         anyHost()
     }
 }
