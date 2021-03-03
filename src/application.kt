@@ -48,6 +48,7 @@ fun Application.module() {
         provider {
             pipeline.intercept(AuthenticationPipeline.CheckAuthentication) {
                 val identity = call.identity
+
                 val user = identity?.asEntity()
                 if (user == null) {
                     if (identity != null) call.identity = null

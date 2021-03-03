@@ -1,0 +1,32 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <h1 class="title">Flashcards</h1>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"
+       [class.is-active]="navActive" (click)="navActive = !navActive">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu" [class.is-active]="navActive">
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a *ngIf="!user" class="button is-button">login</a>
+          <a *ngIf="!user" class="button is-button">login</a>
+          <a *ngIf="user" class="button is-button">login</a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div *ngIf="user === null">
+  <app-login (userLoginChanged)="user = $event"></app-login>
+</div>
+<div *ngIf="user !== null">
+  <button class="button" (click)="logout()">Logout</button>
+</div>
+

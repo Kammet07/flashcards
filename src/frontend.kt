@@ -10,7 +10,7 @@ import java.io.File
 const val path = "static-slug"
 
 fun Application.frontendRouting() = routing {
-    val staticRootFolder = File("frontend/dist").canonicalFile
+    val staticRootFolder = File("frontend-angular/dist").canonicalFile
     val rootFileAbsolute = staticRootFolder.resolve(File("index.html"))
 
     get("{$path...}") {

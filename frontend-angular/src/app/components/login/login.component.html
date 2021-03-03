@@ -1,0 +1,29 @@
+<form (ngSubmit)="login()">
+  <div class="field">
+    <label class="label" for="username">Username</label>
+    <div class="control has-icons-left has-icons-right">
+      <input class="input" type="text" placeholder="Text input" id="username"
+             [(ngModel)]="username" name="username">
+      <span class="icon is-small is-left">
+      <i class="fas fa-user"></i>
+    </span>
+      <span class="icon is-small is-right">
+      <i class="fas fa-check"></i>
+    </span>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label" for="password">Password</label>
+    <div class="control has-icons-left has-icons-right">
+      <input class="input" type="password" placeholder="Text input" id="password"
+             [(ngModel)]="password" name="password">
+      <span class="icon is-small is-left">
+      <i class="fas fa-user"></i>
+    </span>
+      <span class="icon is-small is-right">
+      <i class="fas fa-check"></i>
+    </span>
+    </div>
+  </div>
+  <button class="button">Login</button>
+</form>
