@@ -11,6 +11,8 @@ export class AppComponent {
   title = 'frontend-angular';
   user: UserEntity | null = null;
   navActive = false;
+  loginActive = false;
+  registrationActive = false;
 
   constructor(
     private readonly httpClient: HttpClient

@@ -1,6 +1,8 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <h1 class="title">Flashcards</h1>
+    <div class="navbar-item">
+      <h1 class="title">Flashcards</h1>
+    </div>
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"
        [class.is-active]="navActive" (click)="navActive = !navActive">
       <span aria-hidden="true"></span>
@@ -13,10 +15,9 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a *ngIf="!user" class="button is-button">login</a>
-          <a *ngIf="!user" class="button is-button">login</a>
-          <a *ngIf="user" class="button is-button">login</a>
-
+          <a *ngIf="!user" class="button is-button" (click)="loginActive = true">Login</a>
+          <a *ngIf="!user" class="button is-button" (click)="registrationActive = true">Registration</a>
+          <a *ngIf="user" class="button is-button" (click)="logout(); loginActive = false; registrationActive = false">Logout</a>
         </div>
       </div>
     </div>
@@ -24,9 +25,25 @@
 </nav>
 
 <div *ngIf="user === null">
-  <app-login (userLoginChanged)="user = $event"></app-login>
-</div>
-<div *ngIf="user !== null">
-  <button class="button" (click)="logout()">Logout</button>
-</div>
+  <div id="login-modal" class="modal" [class.is-active]="loginActive">
+    <div class="modal-background" (click)="loginActive = false"></div>
+    <div class="modal-content">
+      <div class="box">
+        <h1 class="title">Login</h1>
+        <app-login (userLoginChanged)="user = $event"></app-login>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="loginActive = false"></button>
+  </div>
 
+  <div id="registration-modal" class="modal" [class.is-active]="registrationActive">
+    <div class="modal-background" (click)="registrationActive = false"></div>
+    <div class="modal-content">
+      <div class="box">
+        <h1 class="title">Registration</h1>
+        <app-registration></app-registration>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="registrationActive = false"></button>
+  </div>
+</div>

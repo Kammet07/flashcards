@@ -1,4 +1,4 @@
-import {Component, OnInit, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UserEntity} from '../../model/user.entity';
 

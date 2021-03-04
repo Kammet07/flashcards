@@ -1,4 +1,4 @@
-<form (ngSubmit)="login()">
+<form (ngSubmit)="register()">
   <div class="field">
     <label class="label" for="username">Username</label>
     <div class="control">
@@ -13,5 +13,13 @@
              [(ngModel)]="password" name="password">
     </div>
   </div>
-  <button class="button">Login</button>
+  <div class="field">
+    <label class="label" for="mail">Mail</label>
+    <div class="control">
+      <input class="input" type="email" placeholder="Text input" id="mail"
+             [(ngModel)]="mail" name="mail">
+    </div>
+  </div>
+
+  <button class="button">Register</button>
 </form>
