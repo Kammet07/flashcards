@@ -17,7 +17,7 @@ import javax.validation.constraints.Size
 @Location("/user")
 class UserLocation {
     @Location("/{userId}")
-    data class Detail(val userId: Long, val userLocation: UserLocation)
+    data class Detail(val userId: Long)
 }
 
 data class UserLoginModel(val username: String, val password: String)
