@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UserEntity} from '../../model/user.entity';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -8,13 +9,14 @@ import {UserEntity} from '../../model/user.entity';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  username = 'pes';
+  username = '';
   password = '';
   @Output()
   userLoginChanged = new EventEmitter<UserEntity>();
 
   constructor(
-    private readonly httpClient: HttpClient
+    private readonly httpClient: HttpClient,
+    private toastr: ToastrService
   ) {
   }
 
@@ -23,6 +25,12 @@ export class LoginComponent {
       username: this.username,
       password: this.password
     })
-      .subscribe(u => this.userLoginChanged.emit(u), error => console.error(error));
+      .subscribe(u => {
+        this.userLoginChanged.emit(u);
+        this.toastr.success('Logged In');
+      }, error => {
+        console.error(error);
+        this.toastr.error('Wrong username or password');
+      });
   }
 }

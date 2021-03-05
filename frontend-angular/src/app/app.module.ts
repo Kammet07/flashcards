@@ -11,6 +11,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {CommonModule} from '@angular/common';
+import { CollectionsComponent } from './components/collections/collections.component';
 
 @Injectable()
 export class CustomInterceptor implements HttpInterceptor {
@@ -29,7 +30,8 @@ export class CustomInterceptor implements HttpInterceptor {
   declarations: [
     AppComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    CollectionsComponent
   ],
   imports: [
     BrowserModule,
