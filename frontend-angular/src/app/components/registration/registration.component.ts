@@ -16,7 +16,7 @@ export class RegistrationComponent {
 
   constructor(
     private readonly httpClient: HttpClient,
-    private toastr: ToastrService
+    private readonly toastr: ToastrService
   ) {
   }
 
