@@ -5,7 +5,9 @@ import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
 import kotlin.properties.ReadOnlyProperty
 
 val entities = arrayOf(UserEntity.Table, CollectionEntity.Table, FlashcardEntity.Table)
@@ -35,9 +37,18 @@ class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
     }
 }
 
-fun <T : Comparable<T>, ID : Comparable<ID>> Column<EntityID<T>>.unwrapped() = ReadOnlyProperty<Entity<ID>, T> { t, p ->
-    with(t) {
-        getValue(t, p).value
+/**
+ * unwraps the Column of entity id to a delegate providing the raw id value
+ *
+ * @param T
+ * @param ID
+ * @return a delegate providing the id's raw value
+ */
+fun <T : Comparable<T>, ID : Comparable<ID>> Column<EntityID<T>>.unwrapped(): ReadOnlyProperty<Entity<ID>, T> {
+    return ReadOnlyProperty { t, p ->
+        with(t) {
+            getValue(t, p).value
+        }
     }
 }
 
@@ -62,10 +73,19 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
     }
 
     companion object Entity : EntityClass<Long, CollectionEntity>(Table) {
-        fun findByCreatorId(creatorId: Long) =
-            find { Table.creator eq creatorId }
 
-        fun findPublic() = find { Table.public eq true }.toList()
+        fun findByCreatorId(creatorId: Long) = Table.join(UserEntity.Table, JoinType.INNER, Table.creator)
+            .select { Table.creator eq creatorId }
+            .asSequence()
+            .map { row ->
+                wrapRow(row).also { UserEntity.wrapRow(row) }
+            }
+
+        fun findPublic() = Table.join(UserEntity.Table, JoinType.INNER, Table.creator).select{ Table.public eq true }
+            .asSequence()
+            .map { row ->
+                wrapRow(row).also { UserEntity.wrapRow(row) }
+            }
 
         fun findUserPrivate(creatorId: Long) =
             find { (Table.public eq false).and(Table.creator eq creatorId) }.toList()

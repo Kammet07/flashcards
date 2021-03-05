@@ -66,17 +66,15 @@ fun Route.flashcardRoutes() {
                 call.response.status(HttpStatusCode.NotFound)
                 call.respond("entity not found")
             }
-            else -> {
-                if (collection.public) call.respond(
+            else -> when {
+                collection.public -> call.respond(
                     FlashcardEntity.findByCollectionId(location.collectionId).map { it.asViewModel() })
-                else {
-                    when (call.identity?.id) {
-                        collection.creatorId -> FlashcardEntity.findByCollectionId(location.collectionId)
-                            .map { it.asViewModel() }
-                        else -> {
-                            call.response.status(HttpStatusCode.Forbidden)
-                            call.respond("forbidden")
-                        }
+                else -> when (call.identity?.id) {
+                    collection.creatorId -> FlashcardEntity.findByCollectionId(location.collectionId)
+                        .map { it.asViewModel() }
+                    else -> {
+                        call.response.status(HttpStatusCode.Forbidden)
+                        call.respond("forbidden")
                     }
                 }
             }
