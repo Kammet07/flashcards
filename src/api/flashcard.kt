@@ -61,17 +61,16 @@ fun FlashcardEntity.valuesFrom(model: IFlashcardModel) {
 @KtorExperimentalLocationsAPI
 fun Route.flashcardRoutes() {
     get<CollectionLocation.Detail> { location ->
+//        println(transaction { FlashcardEntity.findByCollectionId(location.collectionId) }.map { it.asViewModel() })
         when (val collection = transaction { CollectionEntity.findById(location.collectionId) }) {
             null -> {
                 call.response.status(HttpStatusCode.NotFound)
                 call.respond("entity not found")
             }
             else -> when {
-                collection.public -> call.respond(
-                    FlashcardEntity.findByCollectionId(location.collectionId).map { it.asViewModel() })
+                collection.public -> call.respond(transaction { FlashcardEntity.findByCollectionId(location.collectionId) }.map { it.asViewModel() })
                 else -> when (call.identity?.id) {
-                    collection.creatorId -> FlashcardEntity.findByCollectionId(location.collectionId)
-                        .map { it.asViewModel() }
+                    collection.creatorId -> transaction { FlashcardEntity.findByCollectionId(location.collectionId) }.map { it.asViewModel() }
                     else -> {
                         call.response.status(HttpStatusCode.Forbidden)
                         call.respond("forbidden")
@@ -140,13 +139,13 @@ fun Route.flashcardRoutes() {
         }
 
         delete<FlashcardLocation.Detail> { location ->
-            when (FlashcardEntity.findById(location.flashcardId)) {
+            when (transaction { FlashcardEntity.findById(location.flashcardId) }) {
                 null -> {
                     call.response.status(HttpStatusCode.NotFound)
                     call.respond("entity not found")
                 }
                 else -> {
-                    val collection = CollectionEntity.findById(location.collectionId)
+                    val collection = transaction { CollectionEntity.findById(location.collectionId) }
                     call.forbiddenIf { call.identity?.id != collection?.creatorId }
                     transaction {
                         FlashcardEntity.Table.deleteIgnoreWhere { FlashcardEntity.Table.id eq location.flashcardId }

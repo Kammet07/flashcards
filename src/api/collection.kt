@@ -16,7 +16,7 @@ import javax.validation.constraints.Size
 @Location("/collection")
 class CollectionLocation {
     @Location("/{collectionId}")
-    data class Detail(val collectionId: Long)
+    data class Detail(val collectionId: Long, val collectionLocation: CollectionLocation)
 }
 
 @KtorExperimentalLocationsAPI
@@ -136,11 +136,20 @@ fun Route.collectionRoutes() {
      * get all collections
      */
     get<CollectionLocation> {
-        call.respond(transaction {
-            CollectionEntity.findPublic()
-                .map { it.asViewModel() }
-                .toList()
-        })
+        when (call.identity?.id) {
+            null -> {
+                call.respond(transaction {
+                    CollectionEntity.findPublic()
+                        .map { it.asViewModel() }
+                        .toList()
+                })
+            }
+            else -> {
+                call.respond(transaction {
+
+                })
+            }
+        }
     }
 
     get<UserCollections> { location ->
