@@ -1,8 +1,6 @@
 package com.kammet.flashcards.backend.api
 
-import com.kammet.flashcards.backend.CollectionEntity
-import com.kammet.flashcards.backend.UserEntity
-import com.kammet.flashcards.backend.validate
+import com.kammet.flashcards.backend.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -10,14 +8,15 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.validation.constraints.Size
 
 @KtorExperimentalLocationsAPI
 @Location("/collection")
 class CollectionLocation {
-    @Location("/{id}")
-    data class Detail(val id: Long, val collectionLocation: CollectionLocation)
+    @Location("/{collectionId}")
+    data class Detail(val collectionId: Long, val collectionLocation: CollectionLocation)
 }
 
 @KtorExperimentalLocationsAPI
@@ -48,9 +47,9 @@ interface ICollectionModel {
 
 }
 
-data class CollectionViewModel(val id: Long, val category: String, val public: Boolean, val creatorId: Long)
+data class CollectionViewModel(val id: Long, val category: String, val public: Boolean, val creator: UserViewModel?)
 
-fun CollectionEntity.asViewModel() = CollectionViewModel(id.value, category, public, creatorId)
+fun CollectionEntity.asViewModel() = CollectionViewModel(id.value, category, public, creator.asViewModel())
 
 fun CollectionEntity.valuesFrom(model: ICollectionModel, creator: UserEntity) {
     category = model.category
@@ -71,7 +70,7 @@ fun Route.collectionRoutes() {
             val collection = transaction {
                 when {
                     call.identity?.id != model.creatorId -> null
-                    else -> CollectionEntity.new { valuesFrom(model, call.identity!!.asEntity()) }
+                    else -> CollectionEntity.new { valuesFrom(model, call.identity!!.asEntity()!!) }
                 }
             }
             when (collection) {
@@ -96,7 +95,8 @@ fun Route.collectionRoutes() {
                     call.identity!!.id == model.creatorId && CollectionEntity.wasCreatedByUser(
                         model.id,
                         model.creatorId
-                    ) -> CollectionEntity.findById(model.id)?.also { it.valuesFrom(model) }
+                    ) -> CollectionEntity.findById(model.id)
+                        ?.also { it.valuesFrom(model, call.identity!!.asEntity()!!) }
                     else -> null
                 }
             }
@@ -112,9 +112,24 @@ fun Route.collectionRoutes() {
         /**
          * delete collection with all connected flashcards
          */
-//        delete<CollectionLocation.Detail> {
-//
-//        }
+        delete<CollectionLocation.Detail> { location ->
+            when (val collection = CollectionEntity.findById(location.collectionId)) {
+                null -> {
+                    call.response.status(HttpStatusCode.NotFound)
+                    call.respond("entity not found")
+                }
+                else -> {
+                    call.forbiddenIf { call.identity?.id != collection.creatorId }
+                    transaction {
+                        FlashcardEntity.Table.deleteIgnoreWhere { FlashcardEntity.Table.collection eq location.collectionId }
+                    }
+                    transaction {
+                        CollectionEntity.Table.deleteIgnoreWhere { CollectionEntity.Table.id eq location.collectionId }
+                    }
+                    call.respond("removed")
+                }
+            }
+        }
     }
 
     /**
@@ -130,7 +145,8 @@ fun Route.collectionRoutes() {
     get<UserCollections> { location ->
         when (call.identity?.id) {
             location.creatorId -> call.respond(transaction {
-                CollectionEntity.findByCreatorId(location.creatorId).map { it.asViewModel() }
+                CollectionEntity.findByCreatorId(location.creatorId)
+                    .map { it.asViewModel() }
             })
             else ->
                 call.respond(transaction {

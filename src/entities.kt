@@ -32,9 +32,6 @@ class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
         fun findByUsername(username: String) = find { Table.username eq username }.singleOrNull()
         fun existsByUsername(username: String) = find { Table.username eq username }.empty().not()
         fun existsByMail(mail: String) = find { Table.mail eq mail }.empty().not()
-
-//        TODO: fix with left join
-//        fun findCreatedCollections(userId: Long) = find { CollectionEntity.Table.creatorId eq userId }.singleOrNull()
     }
 }
 
@@ -65,8 +62,11 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
     }
 
     companion object Entity : EntityClass<Long, CollectionEntity>(Table) {
-        fun findByCreatorId(creatorId: Long) = find { Table.creator eq creatorId }.toList()
+        fun findByCreatorId(creatorId: Long) =
+            find { Table.creator eq creatorId }
+
         fun findPublic() = find { Table.public eq true }.toList()
+
         fun findUserPrivate(creatorId: Long) =
             find { (Table.public eq false).and(Table.creator eq creatorId) }.toList()
 
@@ -75,6 +75,7 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
 
         fun wasCreatedByUser(id: Long, creatorId: Long) =
             find { (Table.id eq id).and(Table.creator eq creatorId) }.empty().not()
+        // find { (Table.id eq id).and(Table.creatorId eq creatorId) }.empty().not()
     }
 }
 
@@ -85,14 +86,14 @@ class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var collection by CollectionEntity referencedOn Table.collection
 
     object Table : LongIdTable("flashcards") {
-        const val MAX_TERM_LENGTH = 255
-        const val MAX_DEFINITION_LENGTH = 255
+        const val MAX_TEXT_LENGTH = 255
 
-        val term = varchar("term", MAX_TERM_LENGTH)
-        val definition = varchar("definition", MAX_DEFINITION_LENGTH)
 
         // val collectionId = long("collection_id").references(CollectionEntity.Table.id)
         val collection = reference("collection_id", CollectionEntity.Table)
+
+        val term = varchar("term", MAX_TEXT_LENGTH)
+        val definition = varchar("definition", MAX_TEXT_LENGTH)
 
         override val primaryKey: PrimaryKey = PrimaryKey(id)
     }

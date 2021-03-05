@@ -10,5 +10,6 @@ fun Application.apiRouting() = routing {
         userRoutes()
         authenticationRoutes()
         collectionRoutes()
+        flashcardRoutes()
     }
 }
