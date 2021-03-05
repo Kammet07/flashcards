@@ -8,6 +8,7 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.validation.constraints.Email
@@ -119,6 +120,16 @@ fun Route.userRoutes() {
     authenticate {
         delete<UserLocation.Detail> { location ->
             call.forbiddenIf { call.identity?.id != location.userId }
+
+            CollectionEntity.findByCreatorId(location.userId).forEach {
+                transaction {
+                    FlashcardEntity.Table.deleteIgnoreWhere { FlashcardEntity.Table.collectionId eq it.id.value }
+                }
+                transaction {
+                    CollectionEntity.Table.deleteIgnoreWhere { CollectionEntity.Table.id eq it.id }
+                }
+            }
+
             transaction {
                 UserEntity.Table.deleteIgnoreWhere { UserEntity.Table.id eq location.userId }
                 call.identity = null

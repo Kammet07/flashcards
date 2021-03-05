@@ -113,8 +113,6 @@ fun Route.collectionRoutes() {
 
         /**
          * delete collection with all connected flashcards
-         *
-         * TODO: implement
          */
         delete<CollectionLocation.Detail> { location ->
             when (val collection = CollectionEntity.findById(location.collectionId)) {
