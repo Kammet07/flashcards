@@ -104,6 +104,7 @@ class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var term by Table.term
     var definition by Table.definition
     var collection by CollectionEntity referencedOn Table.collection
+    val collectionId by Table.collection.unwrapped()
 
     object Table : LongIdTable("flashcards") {
         const val MAX_TEXT_LENGTH = 255

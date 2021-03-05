@@ -50,7 +50,7 @@ interface IFlashcardModel {
 
 data class FlashcardViewModel(val id: Long, val term: String, val definition: String, val collectionId: Long)
 
-fun FlashcardEntity.asViewModel() = FlashcardViewModel(id.value, term, definition, collection.id.value)
+fun FlashcardEntity.asViewModel() = FlashcardViewModel(id.value, term, definition, collectionId)
 
 fun FlashcardEntity.valuesFrom(model: IFlashcardModel) {
     term = model.term
