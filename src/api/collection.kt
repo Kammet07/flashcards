@@ -1,6 +1,7 @@
 package com.kammet.flashcards.backend.api
 
 import com.kammet.flashcards.backend.CollectionEntity
+import com.kammet.flashcards.backend.UserEntity
 import com.kammet.flashcards.backend.validate
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -51,10 +52,10 @@ data class CollectionViewModel(val id: Long, val category: String, val public: B
 
 fun CollectionEntity.asViewModel() = CollectionViewModel(id.value, category, public, creatorId)
 
-fun CollectionEntity.valuesFrom(model: ICollectionModel) {
+fun CollectionEntity.valuesFrom(model: ICollectionModel, creator: UserEntity) {
     category = model.category
     public = model.public
-    creatorId = model.creatorId
+    this.creator = creator
 }
 
 @KtorExperimentalLocationsAPI
@@ -70,7 +71,7 @@ fun Route.collectionRoutes() {
             val collection = transaction {
                 when {
                     call.identity?.id != model.creatorId -> null
-                    else -> CollectionEntity.new { valuesFrom(model) }
+                    else -> CollectionEntity.new { valuesFrom(model, call.identity!!.asEntity()) }
                 }
             }
             when (collection) {
@@ -121,7 +122,8 @@ fun Route.collectionRoutes() {
      */
     get<CollectionLocation> {
         call.respond(transaction {
-            CollectionEntity.findPublic().map { it.asViewModel() }
+            CollectionEntity.findPublic()
+                .map { it.asViewModel() }
         })
     }
 

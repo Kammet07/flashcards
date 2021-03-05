@@ -142,6 +142,6 @@ fun Application.module() {
 fun connectToDb(dbName: String? = null): Database = Database.connect(
     "jdbc:mysql://127.0.0.1:3306/${dbName.orEmpty()}?characterEncoding=utf8&useUnicode=true",
     "org.mariadb.jdbc.Driver",
-    "card",
-    "flashcards135"
+    "root",
+    ""
 )

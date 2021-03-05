@@ -4,7 +4,9 @@ import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.and
+import kotlin.properties.ReadOnlyProperty
 
 val entities = arrayOf(UserEntity.Table, CollectionEntity.Table, FlashcardEntity.Table)
 
@@ -26,7 +28,7 @@ class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
         override val primaryKey: PrimaryKey = PrimaryKey(id)
     }
 
-    companion object : EntityClass<Long, UserEntity>(Table) {
+    companion object Entity : EntityClass<Long, UserEntity>(Table) {
         fun findByUsername(username: String) = find { Table.username eq username }.singleOrNull()
         fun existsByUsername(username: String) = find { Table.username eq username }.empty().not()
         fun existsByMail(mail: String) = find { Table.mail eq mail }.empty().not()
@@ -36,33 +38,43 @@ class UserEntity(id: EntityID<Long>) : Entity<Long>(id) {
     }
 }
 
+fun <T : Comparable<T>, ID : Comparable<ID>> Column<EntityID<T>>.unwrapped() = ReadOnlyProperty<Entity<ID>, T> { t, p ->
+    with(t) {
+        getValue(t, p).value
+    }
+}
+
 // exposed collection entity
 class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var category by Table.category
-    var creatorId by Table.creatorId
+    val creatorId by Table.creator.unwrapped()
     var public by Table.public
+    var creator by UserEntity referencedOn Table.creator
+    val cards by FlashcardEntity referrersOn FlashcardEntity.Table.collection
+
 
     object Table : LongIdTable("collections") {
         const val MAX_CATEGORY_LENGTH = 255
 
         val category = varchar("category", MAX_CATEGORY_LENGTH)
         val public = bool("public")
-        val creatorId = long("creator_id").references(UserEntity.Table.id)
+        val creator = reference("creator_id", UserEntity.Table)
+
 
         override val primaryKey: PrimaryKey = PrimaryKey(id)
     }
 
-    companion object : EntityClass<Long, CollectionEntity>(Table) {
-        fun findByCreatorId(creatorId: Long) = find { Table.creatorId eq creatorId }.toList()
+    companion object Entity : EntityClass<Long, CollectionEntity>(Table) {
+        fun findByCreatorId(creatorId: Long) = find { Table.creator eq creatorId }.toList()
         fun findPublic() = find { Table.public eq true }.toList()
         fun findUserPrivate(creatorId: Long) =
-            find { (Table.public eq false).and(Table.creatorId eq creatorId) }.toList()
+            find { (Table.public eq false).and(Table.creator eq creatorId) }.toList()
 
         fun findUserPublic(creatorId: Long) =
-            find { (Table.public eq true).and(Table.creatorId eq creatorId) }.toList()
+            find { (Table.public eq true).and(Table.creator eq creatorId) }.toList()
 
         fun wasCreatedByUser(id: Long, creatorId: Long) =
-            find { (Table.id eq id).and(Table.creatorId eq creatorId) }.empty().not()
+            find { (Table.id eq id).and(Table.creator eq creatorId) }.empty().not()
     }
 }
 
@@ -70,7 +82,7 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
 class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
     var term by Table.term
     var definition by Table.definition
-    var collectionId by Table.collectionId
+    var collection by CollectionEntity referencedOn Table.collection
 
     object Table : LongIdTable("flashcards") {
         const val MAX_TERM_LENGTH = 255
@@ -78,12 +90,14 @@ class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
 
         val term = varchar("term", MAX_TERM_LENGTH)
         val definition = varchar("definition", MAX_DEFINITION_LENGTH)
-        val collectionId = long("collection_id").references(CollectionEntity.Table.id)
+
+        // val collectionId = long("collection_id").references(CollectionEntity.Table.id)
+        val collection = reference("collection_id", CollectionEntity.Table)
 
         override val primaryKey: PrimaryKey = PrimaryKey(id)
     }
 
     companion object : EntityClass<Long, FlashcardEntity>(Table) {
-        fun findByCollectionId(collectionId: Long) = find { Table.collectionId eq collectionId }.toList()
+        fun findByCollectionId(collectionId: Long) = find { Table.collection eq collectionId }.toList()
     }
 }

@@ -10,6 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 
 @KtorExperimentalLocationsAPI
@@ -80,9 +81,7 @@ fun Route.userRoutes() {
         val model = call.receive<IUserModel.Create>().also { it.validate() }
         val user = transaction {
             when {
-                UserEntity.existsByUsername(model.username) || !isEmailValid(model.mail) || UserEntity.existsByMail(
-                    model.mail
-                ) -> null
+                UserEntity.existsByUsername(model.username) || UserEntity.existsByMail(model.mail) -> null
                 else -> UserEntity.new { valuesFrom(model) }
             }
         }
