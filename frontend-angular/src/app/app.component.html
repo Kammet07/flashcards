@@ -72,7 +72,7 @@
         <app-collections [userId]="user"></app-collections>
       </div>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="loginActive = false"></button>
+    <button class="modal-close is-large" aria-label="close" (click)="collectionCreateActive = false"></button>
   </div>
 
   <div id="flashcard-modal" class="modal" [class.is-active]="flashcardCreateActive">
@@ -80,7 +80,6 @@
     <div class="modal-content">
       <div class="box">
         <p class="title">Flashcard creation</p>
-
 
       </div>
     </div>
@@ -91,11 +90,7 @@
 
 <!--collections-->
 <section class="section">
-  <div *ngIf="!collections" class="container">
-    <div class="box">
-      <p class="title">There are no collections </p>
-    </div>
-  </div>
+
 
   <div *ngIf="collections" class="container">
     <div class="box" *ngFor="let collection of collections">
@@ -103,10 +98,16 @@
         <tbody>
         <tr>
           <td>Category: {{collection.category}}</td>
-          <td>Creator </td>
+          <td>Creator: {{collection.creator.username}} </td>
         </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div *ngIf="!collections" class="container">
+    <div class="box">
+      <p class="title">There are no collections</p>
     </div>
   </div>
 </section>

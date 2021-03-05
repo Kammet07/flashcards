@@ -25,6 +25,7 @@ export class AppComponent {
     private toastr: ToastrService
   ) {
     httpClient.get<UserEntity>('http://localhost:8080/api/authentication').subscribe(u => this.user = u);
+    this.loadCollections();
   }
 
   logout(): void {
@@ -34,14 +35,13 @@ export class AppComponent {
     });
   }
 
-  getUserById(id: number): string {
-    let result = '';
-    this.httpClient.get<UserEntity>(`http://localhost:8080/api/user/${id}`).subscribe(u => {
-      result = u.username;
-    }, error => {
-      console.error(error);
-      result = 'Error';
-    });
-    return result;
+  private loadCollections(): void {
+    this.httpClient.get<CollectionEntity[]>('http://0.0.0.0:8080/api/collection')
+      .subscribe(u => {
+        this.collections = u;
+      }, error => {
+        console.error(error);
+        this.toastr.error('Something went wrong while getting collections', error.status);
+      });
   }
 }
