@@ -12,14 +12,12 @@ import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.validation.constraints.Size
 
-@KtorExperimentalLocationsAPI
 @Location("/collection")
 class CollectionLocation {
     @Location("/{collectionId}")
     data class Detail(val collectionId: Long)
 }
 
-@KtorExperimentalLocationsAPI
 @Location("/user/{creatorId}/collections")
 data class UserCollections(val creatorId: Long)
 
@@ -57,7 +55,6 @@ fun CollectionEntity.valuesFrom(model: ICollectionModel, creator: UserEntity) {
     this.creator = creator
 }
 
-@KtorExperimentalLocationsAPI
 fun Route.collectionRoutes() {
     authenticate {
         /**

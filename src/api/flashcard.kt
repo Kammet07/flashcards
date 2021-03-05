@@ -15,7 +15,6 @@ import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.validation.constraints.Size
 
-@KtorExperimentalLocationsAPI
 @Location("/flashcard")
 class FlashcardLocation {
     @Location("/{collectionId}/{flashcardId}")
@@ -58,7 +57,6 @@ fun FlashcardEntity.valuesFrom(model: IFlashcardModel) {
     collection = model.collectionId.let { CollectionEntity.findById(it)!! }
 }
 
-@KtorExperimentalLocationsAPI
 fun Route.flashcardRoutes() {
     get<CollectionLocation.Detail> { location ->
 //        println(transaction { FlashcardEntity.findByCollectionId(location.collectionId) }.map { it.asViewModel() })

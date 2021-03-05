@@ -20,11 +20,9 @@ var ApplicationCall.identity: UserIdentity?
         else -> sessions.set(value)
     }
 
-@KtorExperimentalLocationsAPI
 @Location("/authentication")
 object AuthenticationLocation
 
-@KtorExperimentalLocationsAPI
 fun Route.authenticationRoutes() {
     post<AuthenticationLocation> {
         val model = call.receive<UserLoginModel>()

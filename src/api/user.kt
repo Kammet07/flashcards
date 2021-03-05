@@ -14,7 +14,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 
-@KtorExperimentalLocationsAPI
 @Location("/user")
 class UserLocation {
     @Location("/{userId}")
@@ -58,7 +57,6 @@ fun UserEntity.valuesFrom(model: IUserModel) {
 
 fun UserEntity.asViewModel() = UserViewModel(id.value, username, mail)
 
-@KtorExperimentalLocationsAPI
 fun Route.userRoutes() {
     /**
      * returns all users?
