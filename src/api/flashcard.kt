@@ -50,12 +50,12 @@ interface IFlashcardModel {
 
 data class FlashcardViewModel(val id: Long, val term: String, val definition: String, val collectionId: Long)
 
-fun FlashcardEntity.asViewModel() = FlashcardViewModel(id.value, term, definition, collectionId)
+fun FlashcardEntity.asViewModel() = FlashcardViewModel(id.value, term, definition, collection.id.value)
 
 fun FlashcardEntity.valuesFrom(model: IFlashcardModel) {
     term = model.term
     definition = model.definition
-    collectionId = model.collectionId
+    collection = model.collectionId.let { CollectionEntity.findById(it)!! }
 }
 
 @KtorExperimentalLocationsAPI

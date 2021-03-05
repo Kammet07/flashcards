@@ -121,7 +121,7 @@ fun Route.userRoutes() {
 
             CollectionEntity.findByCreatorId(location.userId).forEach {
                 transaction {
-                    FlashcardEntity.Table.deleteIgnoreWhere { FlashcardEntity.Table.collectionId eq it.id.value }
+                    FlashcardEntity.Table.deleteIgnoreWhere { FlashcardEntity.Table.collection eq it.id.value }
                 }
                 transaction {
                     CollectionEntity.Table.deleteIgnoreWhere { CollectionEntity.Table.id eq it.id }
