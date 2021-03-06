@@ -24,19 +24,19 @@ export class AppComponent {
     private readonly httpClient: HttpClient,
     private toastr: ToastrService
   ) {
-    httpClient.get<UserEntity>('http://localhost:8080/api/authentication').subscribe(u => this.user = u);
+    httpClient.get<UserEntity>('http://192.168.0.165:8080/api/authentication', {withCredentials: true}).subscribe(u => this.user = u);
     this.loadCollections();
   }
 
   logout(): void {
-    this.httpClient.delete('http://localhost:8080/api/authentication').subscribe(() => {
+    this.httpClient.delete('http://192.168.0.165:8080/api/authentication', {withCredentials: true}).subscribe(() => {
       this.user = null;
       this.toastr.success('Logged out');
     });
   }
 
   private loadCollections(): void {
-    this.httpClient.get<CollectionEntity[]>('http://0.0.0.0:8080/api/collection')
+    this.httpClient.get<CollectionEntity[]>('http://192.168.0.165:8080/api/collection')
       .subscribe(u => {
         this.collections = u;
       }, error => {

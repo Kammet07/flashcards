@@ -4,10 +4,7 @@ import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import kotlin.properties.ReadOnlyProperty
 
 val entities = arrayOf(UserEntity.Table, CollectionEntity.Table, FlashcardEntity.Table)
@@ -81,7 +78,14 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
                 wrapRow(row).also { UserEntity.wrapRow(row) }
             }
 
-        fun findPublic() = Table.join(UserEntity.Table, JoinType.INNER, Table.creator).select{ Table.public eq true }
+        fun findPublic() = Table.join(UserEntity.Table, JoinType.INNER, Table.creator).select { Table.public eq true }
+            .asSequence()
+            .map { row ->
+                wrapRow(row).also { UserEntity.wrapRow(row) }
+            }
+
+        fun findPublicAndCreatedByUser(creatorId: Long) = Table.join(UserEntity.table, JoinType.INNER, Table.creator)
+            .select { Table.public eq true or (Table.creator eq creatorId) }
             .asSequence()
             .map { row ->
                 wrapRow(row).also { UserEntity.wrapRow(row) }

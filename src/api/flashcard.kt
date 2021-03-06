@@ -18,9 +18,8 @@ import javax.validation.constraints.Size
 @Location("/flashcard")
 class FlashcardLocation {
     @Location("/{collectionId}/{flashcardId}")
-    data class Detail(val collectionId: Long, val flashcardId: Long)
+    data class Detail(val collectionId: Long, val flashcardId: Long, val flashcardLocation: FlashcardLocation)
 }
-
 
 interface IFlashcardModel {
     val id: Long

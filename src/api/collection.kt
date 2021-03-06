@@ -15,7 +15,7 @@ import javax.validation.constraints.Size
 @Location("/collection")
 class CollectionLocation {
     @Location("/{collectionId}")
-    data class Detail(val collectionId: Long)
+    data class Detail(val collectionId: Long, val collectionLocation: CollectionLocation)
 }
 
 @Location("/user/{creatorId}/collections")
@@ -143,7 +143,9 @@ fun Route.collectionRoutes() {
             }
             else -> {
                 call.respond(transaction {
-
+                    CollectionEntity.findPublicAndCreatedByUser(call.identity!!.id)
+                        .map { it.asViewModel() }
+                        .toList()
                 })
             }
         }
