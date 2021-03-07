@@ -110,7 +110,7 @@ fun Route.collectionRoutes() {
          * delete collection with all connected flashcards
          */
         delete<CollectionLocation.Detail> { location ->
-            when (val collection = CollectionEntity.findById(location.collectionId)) {
+            when (val collection = transaction { CollectionEntity.findById(location.collectionId) }) {
                 null -> {
                     call.response.status(HttpStatusCode.NotFound)
                     call.respond("entity not found")

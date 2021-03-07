@@ -44,4 +44,16 @@ export class AppComponent {
         this.toastr.error('Something went wrong while getting collections', error.status);
       });
   }
+
+  deleteCollection(collectionId: string): void {
+    this.httpClient.delete(`http://192.168.0.165:8080/api/collection/${collectionId}`, {withCredentials: true, responseType: 'text'})
+      .subscribe(u => {
+        console.log(u);
+        // this.toastr.success();
+        this.toastr.success('Collection has been removed');
+      }, error => {
+        console.error(error);
+        this.toastr.warning(error.statusText, error.status);
+      });
+  }
 }
