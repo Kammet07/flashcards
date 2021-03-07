@@ -1,7 +1,7 @@
 <!--banner and navbar-->
 <section class="hero is-dark is-halfheight">
   <div class="hero-head">
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="container">
         <div class="navbar-brand">
           <div class="navbar-item">
@@ -18,13 +18,13 @@
 
         <div id="navbarBasicExample" class="navbar-menu" [class.is-active]="navActive">
           <div class="navbar-end">
-            <a *ngIf="!user" class="navbar-item" (click)="loginActive = true">Login</a>
-            <a *ngIf="!user" class="navbar-item" (click)="registrationActive = true">Registration</a>
+            <a *ngIf="!user" class="navbar-item" (click)="loginActive = true; navActive = false">Login</a>
+            <a *ngIf="!user" class="navbar-item" (click)="registrationActive = true; navActive = false">Registration</a>
 
-            <a *ngIf="user" class="navbar-item" (click)="collectionCreateActive = true">Create collection</a>
+            <a *ngIf="user" class="navbar-item" (click)="collectionCreateActive = true; navActive = false">Create
+              collection</a>
             <a *ngIf="user" class="navbar-item"
-               (click)="logout(); loginActive = false; registrationActive = false">Logout</a>
-            <a href=""></a>
+               (click)="logout(); loginActive = false; registrationActive = false; navActive = false">Logout</a>
           </div>
         </div>
       </div>
@@ -71,7 +71,8 @@
     <div class="modal-content">
       <div class="box">
         <p class="title">Create collection</p>
-        <app-collections [userId]="user"></app-collections>
+        <app-collections [user]="user"
+                         (createdCollection)="collections?.add($event); collectionCreateActive = false"></app-collections>
       </div>
     </div>
     <button class="modal-close is-large" aria-label="close" (click)="collectionCreateActive = false"></button>
@@ -92,7 +93,7 @@
 </div>
 
 
-<!--collections-->
+<!--collections and flashcards modal-->
 <section class="section">
   <div *ngIf="collections" class="container">
     <div class="box" *ngFor="let collection of collections">
@@ -113,13 +114,15 @@
         </div>
         <div class="level-right">
           <div class="level-item has-text-centered-mobile">
-            <button class="button is-dark is-medium">View</button>
+            <button class="button is-dark is-medium" (click)="flashcardCollection = collection; flashcardActive = true">
+              View
+            </button>
           </div>
           <div *ngIf="user?.id == collection.creator.id" class="level-item has-text-centered-mobile">
             <button class="button is-medium">Edit</button>
           </div>
           <div *ngIf="user?.id == collection.creator.id" class="level-item has-text-centered-mobile">
-            <button class="button is-danger is-outlined is-medium" (click)="deleteCollection(collection.id)">Delete
+            <button class="button is-danger is-outlined is-medium" (click)="deleteCollection(collection)">Delete
             </button>
           </div>
         </div>
@@ -135,15 +138,12 @@
 </section>
 
 <!--flashcards-->
-<div *ngIf="user !== null">
+<div>
   <div id="flashcard-modal" class="modal" [class.is-active]="flashcardActive">
     <div class="modal-background" (click)="flashcardActive = false"></div>
     <div class="modal-content">
-      <div class="box">
-        <p class="title">Flashcard</p>
-
-      </div>
+      <app-flashcards [collection]="flashcardCollection" [user]="user"></app-flashcards>
+      <button class="modal-close is-large" aria-label="close" (click)="flashcardActive = false"></button>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="flashcardActive = false"></button>
   </div>
 </div>

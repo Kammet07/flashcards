@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CollectionEntity} from '../../model/collection.entity';
 import {UserEntity} from '../../model/user.entity';
@@ -13,7 +13,9 @@ export class CollectionsComponent {
   category = '';
   public = false;
   @Input()
-  userId: UserEntity | null = null;
+  user: UserEntity | null = null;
+  @Output()
+  createdCollection = new EventEmitter<CollectionEntity>();
 
   constructor(
     private readonly httpClient: HttpClient,
@@ -22,15 +24,16 @@ export class CollectionsComponent {
   }
 
   createCollection(): void {
-    if (!this.userId) {
+    if (!this.user) {
       this.toastr.error('Not authorised!');
     } else {
       this.httpClient.post<CollectionEntity>('http://192.168.0.165:8080/api/collection', {
         category: this.category,
         public: this.public,
-        creatorId: this.userId.id
+        creatorId: this.user.id
       }, {withCredentials: true}).subscribe(u => {
         this.toastr.success(`Collection ${u.category} was created`);
+        this.createdCollection.emit(u);
       }, error => {
         console.error(error);
         this.toastr.error('Collection creation went wrong');

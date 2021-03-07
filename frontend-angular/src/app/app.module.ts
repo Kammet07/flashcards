@@ -12,6 +12,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {CommonModule} from '@angular/common';
 import { CollectionsComponent } from './components/collections/collections.component';
+import { FlashcardsComponent } from './components/flashcards/flashcards.component';
 
 @Injectable()
 export class CustomInterceptor implements HttpInterceptor {
@@ -31,7 +32,8 @@ export class CustomInterceptor implements HttpInterceptor {
     AppComponent,
     LoginComponent,
     RegistrationComponent,
-    CollectionsComponent
+    CollectionsComponent,
+    FlashcardsComponent
   ],
   imports: [
     BrowserModule,
