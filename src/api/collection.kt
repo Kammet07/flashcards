@@ -67,7 +67,7 @@ fun Route.collectionRoutes() {
             val collection = transaction {
                 when {
                     call.identity?.id != model.creatorId -> null
-                    else -> CollectionEntity.new { valuesFrom(model, call.identity!!.asEntity()!!) }
+                    else -> CollectionEntity.new { valuesFrom(model, call.identity!!.asEntity()) }.asViewModel()
                 }
             }
             when (collection) {
@@ -77,7 +77,7 @@ fun Route.collectionRoutes() {
                 }
                 else -> {
                     call.response.status(HttpStatusCode.Created)
-                    call.respond(collection.asViewModel())
+                    call.respond(collection)
                 }
             }
         }
@@ -93,7 +93,7 @@ fun Route.collectionRoutes() {
                         model.id,
                         model.creatorId
                     ) -> CollectionEntity.findById(model.id)
-                        ?.also { it.valuesFrom(model, call.identity!!.asEntity()!!) }
+                        ?.also { it.valuesFrom(model, call.identity!!.asEntity()) }
                     else -> null
                 }
             }

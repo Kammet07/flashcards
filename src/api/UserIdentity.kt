@@ -4,7 +4,9 @@ import com.kammet.flashcards.backend.UserEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
 data class UserIdentity(val id: Long) {
-    fun asEntity(): UserEntity? = transaction {
+    fun asEntityOrNull(): UserEntity? = transaction {
         UserEntity.findById(this@UserIdentity.id)
     }
+
+    fun asEntity(): UserEntity = asEntityOrNull()!!
 }
