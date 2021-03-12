@@ -25,15 +25,13 @@ interface IFlashcardModel {
     val id: Long
     val term: String
     val definition: String
-    val collectionId: Long
 
     data class Create(
         override val id: Long,
         @Size(min = 1, max = FlashcardEntity.Table.MAX_TEXT_LENGTH)
         override val term: String,
         @Size(min = 1, max = FlashcardEntity.Table.MAX_TEXT_LENGTH)
-        override val definition: String,
-        override val collectionId: Long
+        override val definition: String
     ) : IFlashcardModel
 
     data class Edit(
@@ -41,8 +39,7 @@ interface IFlashcardModel {
         @Size(min = 1, max = FlashcardEntity.Table.MAX_TEXT_LENGTH)
         override val term: String,
         @Size(min = 1, max = FlashcardEntity.Table.MAX_TEXT_LENGTH)
-        override val definition: String,
-        override val collectionId: Long
+        override val definition: String
     ) : IFlashcardModel
 }
 
@@ -50,10 +47,10 @@ data class FlashcardViewModel(val id: Long, val term: String, val definition: St
 
 fun FlashcardEntity.asViewModel() = FlashcardViewModel(id.value, term, definition, collectionId)
 
-fun FlashcardEntity.valuesFrom(model: IFlashcardModel) {
+fun FlashcardEntity.valuesFrom(model: IFlashcardModel, collectionId: Long) {
     term = model.term
     definition = model.definition
-    collection = model.collectionId.let { CollectionEntity.findById(it)!! }
+    collection = collectionId.let { CollectionEntity.findById(it)!! }
 }
 
 fun Route.flashcardRoutes() {
@@ -88,7 +85,7 @@ fun Route.flashcardRoutes() {
                 else -> {
                     val flashcard = transaction {
                         when (call.identity?.id) {
-                            collection.creatorId -> FlashcardEntity.new { valuesFrom(model) }
+                            collection.creatorId -> FlashcardEntity.new { valuesFrom(model, location.collectionId) }
                             else -> null
                         }
                     }
@@ -117,7 +114,7 @@ fun Route.flashcardRoutes() {
                     val flashcard = transaction {
                         when (call.identity?.id) {
                             collection.creatorId -> FlashcardEntity.findById(model.id)
-                                ?.also { it.valuesFrom(model) }
+                                ?.also { it.valuesFrom(model, location.collectionId) }
                             else -> null
                         }
                     }
