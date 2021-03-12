@@ -17,13 +17,12 @@ export class AppComponent {
   loginActive = false;
   registrationActive = false;
   flashcardCreateActive = false;
-  flashcardActive = false;
   flashcardCollection: CollectionEntity | null = null;
   collectionCreateActive = false;
 
   constructor(
     private readonly httpClient: HttpClient,
-    private toastr: ToastrService
+    private readonly toastr: ToastrService
   ) {
     httpClient.get<UserEntity>('http://192.168.0.165:8080/api/authentication', {withCredentials: true}).subscribe(u => this.user = u);
     this.loadCollections();
@@ -48,9 +47,7 @@ export class AppComponent {
 
   deleteCollection(collection: CollectionEntity): void {
     this.httpClient.delete(`http://192.168.0.165:8080/api/collection/${collection.id}`, {withCredentials: true, responseType: 'text'})
-      .subscribe(u => {
-        console.log(u);
-        // this.toastr.success();
+      .subscribe(() => {
         this.toastr.success('Collection has been removed');
         this.collections?.delete(collection);
       }, error => {

@@ -114,7 +114,7 @@
         </div>
         <div class="level-right">
           <div class="level-item has-text-centered-mobile">
-            <button class="button is-dark is-medium" (click)="flashcardCollection = collection; flashcardActive = true">
+            <button class="button is-dark is-medium" (click)="flashcardCollection = collection">
               View
             </button>
           </div>
@@ -139,11 +139,9 @@
 
 <!--flashcards-->
 <div>
-  <div id="flashcard-modal" class="modal" [class.is-active]="flashcardActive">
-    <div class="modal-background" (click)="flashcardActive = false"></div>
-    <div class="modal-content">
-      <app-flashcards [collection]="flashcardCollection" [user]="user"></app-flashcards>
-      <button class="modal-close is-large" aria-label="close" (click)="flashcardActive = false"></button>
-    </div>
+  <div id="flashcard-modal" class="modal" [class.is-active]="flashcardCollection">
+    <div class="modal-background" (click)="flashcardCollection = null"></div>
+    <app-flashcards *ngIf="flashcardCollection" [collection]="flashcardCollection" [user]="user"></app-flashcards>
+    <button class="modal-close is-large" aria-label="close" (click)="flashcardCollection = null"></button>
   </div>
 </div>

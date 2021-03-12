@@ -1,5 +1,116 @@
-<div class="box">
-  <p class="title">Flashcards</p>
-  <p *ngIf="!flashcards" class="subtitle">There are no flashcards in this collection</p>
+<div class="modal-card" id="flashcard-modal-card">
+  <div class="modal-card-head">
+    <p class="modal-card-title">
+      <span class="title is-2">{{collection.category}}</span>
+      <span
+        *ngIf="flashcards.length > 0"
+        class="subtitle is-5">{{activeFlashcardIndex + 1}}/{{flashcards.length}}</span>
+    </p>
+  </div>
+  <div [ngSwitch]="flashcards.length" class="modal-card-body">
+    <div [class.is-hidden]="showEdit || showCreate">
+      <p *ngSwitchCase="0" class="title">There are no flashcards in this collection</p>
+      <div *ngSwitchDefault>
+        <br>
+        <br>
+        <br>
+        <div id="term">
+          <p class="title is-1 has-text-centered">{{flashcards[activeFlashcardIndex].term}}</p>
+        </div>
+        <div id="definition">
+          <p class="subtitle is-3 has-text-centered"
+             [class.has-text-white]="!showDefinition">{{flashcards[activeFlashcardIndex].definition}}</p>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="level">
+          <div class="level-item">
+            <button class="button" (click)="showDefinition = !showDefinition" [class.is-dark]="showDefinition">
+              <span *ngIf="!showDefinition">Show definition</span>
+              <span *ngIf="showDefinition">Hide definition</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!--    flashcard create form-->
+    <div *ngIf="user?.id === collection.creator.id" [class.is-hidden]="!showCreate">
+      <form (ngSubmit)="createFlashcard()">
+        <div class="field">
+          <label for="createTerm" class="label">Term</label>
+          <div class="control">
+            <input type="text" placeholder="Term" id="createTerm" [(ngModel)]="createTerm" class="input"
+                   name="createTerm">
+          </div>
+        </div>
+        <div class="field">
+          <label for="createDefinition" class="label">Definition</label>
+          <div class="control">
+            <input type="text" placeholder="Definition" id="createDefinition" [(ngModel)]="createDefinition"
+                   class="input" name="createDefinition">
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="button is-dark" type="submit">Add flashcard</button>
+          <button class="button" type="button" (click)="showCreate = false; createTerm = ''; createDefinition = ''">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!--    flashcard edit form-->
+    <div *ngIf="user?.id === collection.creator.id && flashcards.length > 0" [class.is-hidden]="!showEdit">
+      <form (ngSubmit)="editFlashcard()">
+        <div class="field">
+          <label for="editTerm" class="label">Term</label>
+          <div class="control">
+            <input type="text" placeholder="Term" id="editTerm" [(ngModel)]="editTerm" class="input"
+                   name="editTerm">
+          </div>
+        </div>
+        <div class="field">
+          <label for="editDefinition" class="label">Definition</label>
+          <div class="control">
+            <input type="text" placeholder="Definition" id="editDefinition" [(ngModel)]="editDefinition"
+                   class="input" name="editDefinition">
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="button is-dark" type="submit">Edit flashcard</button>
+          <button class="button" type="button" (click)="showEdit = false; editTerm = ''; editDefinition = ''">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+  <div class="modal-card-foot">
+    <div *ngIf="flashcards.length > 0 || user?.id === collection.creator.id">
+      <button *ngIf="flashcards.length > 0" class="button"
+              (click)="activeFlashcardIndex = (activeFlashcardIndex - 1 + flashcards.length) % flashcards.length; showDefinition = false">
+        Previous
+      </button>
+      <button *ngIf="user?.id === collection.creator.id" class="button" (click)="showCreate = true; showEdit = false">
+        Create
+      </button>
+      <button *ngIf="user?.id === collection.creator.id && flashcards.length > 0"
+              class="button" (click)="showEdit = true; showCreate = false">
+        Edit
+      </button>
+      <button *ngIf="user?.id === collection.creator.id && flashcards.length > 0" (click)="deleteFlashcard()" class="button">
+        Delete
+      </button>
+      <button *ngIf="flashcards.length > 0" class="button"
+              (click)="activeFlashcardIndex = (activeFlashcardIndex + 1) % flashcards.length; showDefinition = false">
+        Next
+      </button>
+    </div>
+  </div>
 </div>
