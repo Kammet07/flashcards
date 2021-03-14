@@ -104,7 +104,8 @@
               class="button" (click)="showEdit = true; showCreate = false">
         Edit
       </button>
-      <button *ngIf="user?.id === collection.creator.id && flashcards.length > 0" (click)="deleteFlashcard()" class="button">
+      <button *ngIf="user?.id === collection.creator.id && flashcards.length > 0" (click)="deleteFlashcard()"
+              class="button">
         Delete
       </button>
       <button *ngIf="flashcards.length > 0" class="button"

@@ -79,16 +79,17 @@
   </div>
 </div>
 
+
+<!--collection edit modal-->
 <div *ngIf="user !== null">
-  <div id="flashcard-creation-modal" class="modal" [class.is-active]="flashcardCreateActive">
-    <div class="modal-background" (click)="flashcardCreateActive = false"></div>
+  <div id="flashcard-creation-modal" class="modal" [class.is-active]="collectionEdit">
+    <div class="modal-background" (click)="collectionEdit = false"></div>
     <div class="modal-content">
       <div class="box">
-        <p class="title">Flashcard creation</p>
-
+        <p class="title">Collection Edit</p>
       </div>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="flashcardCreateActive = false"></button>
+    <button class="modal-close is-large" aria-label="close" (click)="collectionEdit = false"></button>
   </div>
 </div>
 
@@ -135,6 +136,8 @@
       <p class="title">There are no collections</p>
     </div>
   </div>
+
+
 </section>
 
 <!--flashcards-->

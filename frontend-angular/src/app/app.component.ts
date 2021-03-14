@@ -16,7 +16,7 @@ export class AppComponent {
   navActive = false;
   loginActive = false;
   registrationActive = false;
-  flashcardCreateActive = false;
+  collectionEdit = false;
   flashcardCollection: CollectionEntity | null = null;
   collectionCreateActive = false;
 

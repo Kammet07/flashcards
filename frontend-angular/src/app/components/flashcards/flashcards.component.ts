@@ -109,6 +109,12 @@ export class FlashcardsComponent {
         .subscribe(() => {
           this.toastr.success('Flashcard has been removed');
           this.flashcards.slice(this.activeFlashcardIndex, 1);
+
+          if (this.flashcards.length > 0) {
+            this.activeFlashcardIndex = (this.activeFlashcardIndex - 1 + this.flashcards.length) % this.flashcards.length;
+          }
+
+          this.loadFlashcards(this.collection);
         }, error => {
           this.toastr.error(error.responseText, error.response);
         });

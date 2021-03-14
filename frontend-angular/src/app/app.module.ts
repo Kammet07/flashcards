@@ -13,6 +13,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {CommonModule} from '@angular/common';
 import { CollectionsComponent } from './components/collections/collections.component';
 import { FlashcardsComponent } from './components/flashcards/flashcards.component';
+import { CollectionEditComponent } from './components/collection-edit/collection-edit.component';
 
 @Injectable()
 export class CustomInterceptor implements HttpInterceptor {
@@ -33,7 +34,8 @@ export class CustomInterceptor implements HttpInterceptor {
     LoginComponent,
     RegistrationComponent,
     CollectionsComponent,
-    FlashcardsComponent
+    FlashcardsComponent,
+    CollectionEditComponent
   ],
   imports: [
     BrowserModule,
