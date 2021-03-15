@@ -31,12 +31,12 @@ export class CollectionsComponent {
         category: this.category,
         public: this.public,
         creatorId: this.user.id
-      }, {withCredentials: true}).subscribe(u => {
-        this.toastr.success(`Collection ${u.category} was created`);
-        this.createdCollection.emit(u);
+      }, {withCredentials: true}).subscribe(response => {
+        this.toastr.success(`Collection ${response.category} was created`);
+        this.createdCollection.emit(response);
       }, error => {
         console.error(error);
-        this.toastr.error('Collection creation went wrong');
+        this.toastr.error('Collection creation went wrong', error.status);
       });
     }
   }

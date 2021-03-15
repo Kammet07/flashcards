@@ -25,8 +25,8 @@ export class LoginComponent {
       username: this.username,
       password: this.password
     })
-      .subscribe(u => {
-        this.userLoginChanged.emit(u);
+      .subscribe(response => {
+        this.userLoginChanged.emit(response);
         this.toastr.success('Logged In');
       }, error => {
         console.error(error);

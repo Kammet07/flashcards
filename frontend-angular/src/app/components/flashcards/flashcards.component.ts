@@ -46,9 +46,9 @@ export class FlashcardsComponent {
       this.toastr.error('Fetching flashcards went wrong: no collection given');
     } else {
       this.httpClient.get<FlashcardEntity[]>(`http://192.168.0.165:8080/api/collection/${collection.id}`, {withCredentials: true})
-        .subscribe(u => {
-          console.log(u);
-          this.flashcards = u;
+        .subscribe(response => {
+          console.log(response);
+          this.flashcards = response;
         }, error => {
           console.error(error);
         });
@@ -62,10 +62,10 @@ export class FlashcardsComponent {
       this.httpClient.post<FlashcardEntity>(`http://192.168.0.165:8080/api/collection/${this.collection.id}`, {
         term: this.createTerm,
         definition: this.createDefinition,
-      }, {withCredentials: true}).subscribe(u => {
-        console.log(u);
-        this.flashcards.push(u);
-        this.toastr.success(`Flashcard ${u.term} successfully added`);
+      }, {withCredentials: true}).subscribe(response => {
+        console.log(response);
+        this.flashcards.push(response);
+        this.toastr.success(`Flashcard ${response.term} successfully added`);
         this.createTerm = '';
         this.createDefinition = '';
       }, error => {
@@ -85,10 +85,10 @@ export class FlashcardsComponent {
         id: this.flashcards[this.activeFlashcardIndex].id,
         term: this.editTerm,
         definition: this.editDefinition,
-      }, {withCredentials: true}).subscribe(u => {
-        console.log(u);
-        this.toastr.success(`Flashcard ${u.term} successfully edited`);
-        this.flashcards[this.activeFlashcardIndex] = u;
+      }, {withCredentials: true}).subscribe(response => {
+        console.log(response);
+        this.toastr.success(`Flashcard ${response.term} successfully edited`);
+        this.flashcards[this.activeFlashcardIndex] = response;
       }, error => {
         console.error(error);
         this.toastr.error(error.statusText, error.status);

@@ -16,7 +16,7 @@ export class AppComponent {
   navActive = false;
   loginActive = false;
   registrationActive = false;
-  collectionEdit = false;
+  collectionEdit: CollectionEntity | null = null;
   flashcardCollection: CollectionEntity | null = null;
   collectionCreateActive = false;
 
@@ -24,7 +24,7 @@ export class AppComponent {
     private readonly httpClient: HttpClient,
     private readonly toastr: ToastrService
   ) {
-    httpClient.get<UserEntity>('http://192.168.0.165:8080/api/authentication', {withCredentials: true}).subscribe(u => this.user = u);
+    httpClient.get<UserEntity>('http://192.168.0.165:8080/api/authentication', {withCredentials: true}).subscribe(response => this.user = response);
     this.loadCollections();
   }
 
@@ -37,8 +37,8 @@ export class AppComponent {
 
   private loadCollections(): void {
     this.httpClient.get<CollectionEntity[]>('http://192.168.0.165:8080/api/collection')
-      .subscribe(u => {
-        this.collections = new Set(u);
+      .subscribe(response => {
+        this.collections = new Set(response);
       }, error => {
         console.error(error);
         this.toastr.error('Something went wrong while getting collections', error.status);
