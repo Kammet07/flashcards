@@ -22,7 +22,6 @@ import java.time.Duration
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 //application
-@KtorExperimentalLocationsAPI
 @Suppress("unused") //Referenced in application.conf
 fun Application.module() {
     //connection to mariadb

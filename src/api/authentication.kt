@@ -41,7 +41,7 @@ fun Route.authenticationRoutes() {
 
     authenticate {
         get<AuthenticationLocation> {
-            call.respond(call.identity!!.asEntity()!!.asViewModel())
+            call.respond(call.identity!!.asEntity().asViewModel())
         }
     }
 

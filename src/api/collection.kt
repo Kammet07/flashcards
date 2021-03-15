@@ -22,13 +22,11 @@ class CollectionLocation {
 data class UserCollections(val creatorId: Long)
 
 interface ICollectionModel {
-    val id: Long?
     val category: String
     val public: Boolean
     val creatorId: Long
 
     data class Create(
-        override val id: Long?,
         @Size(min = 1, max = CollectionEntity.Table.MAX_CATEGORY_LENGTH)
         override val category: String,
         override val public: Boolean,
@@ -36,7 +34,6 @@ interface ICollectionModel {
     ) : ICollectionModel
 
     data class Edit(
-        override val id: Long,
         @Size(min = 1, max = CollectionEntity.Table.MAX_CATEGORY_LENGTH)
         override val category: String,
         override val public: Boolean,
@@ -85,14 +82,14 @@ fun Route.collectionRoutes() {
         /**
          * edit collection
          */
-        put<CollectionLocation.Detail> {
+        put<CollectionLocation.Detail> { location ->
             val model = call.receive<ICollectionModel.Edit>().also { it.validate() }
             val collection = transaction {
                 when {
                     call.identity!!.id == model.creatorId && CollectionEntity.wasCreatedByUser(
-                        model.id,
+                        location.collectionId,
                         model.creatorId
-                    ) -> CollectionEntity.findById(model.id)
+                    ) -> CollectionEntity.findById(location.collectionId)
                         ?.also { it.valuesFrom(model, call.identity!!.asEntity()) }
                     else -> null
                 }
