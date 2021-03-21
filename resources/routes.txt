@@ -1,9 +1,0 @@
-/api
-    /user get(all users) post(register)
-        /{userId} get(view model of user) delete(delete user) put(edit password or/and mail)
-            /collections get(user's collections)
-    /authentication post(log in) get(logged user) delete(log out)
-    /collection post(create collection) get(all public and logged user's private collections)
-        /{collectionId} put(edit collection's details) delete(delete collection with flashcards connected to it) get(flashcards connected to collection) post(add flashcard)
-    /flashcard ?
-        /{collectionId}/{flashcardId} put(edit flashcard) delete(delete flashcard)

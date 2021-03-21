@@ -90,7 +90,7 @@ fun Route.collectionRoutes() {
                         location.collectionId,
                         model.creatorId
                     ) -> CollectionEntity.findById(location.collectionId)
-                        ?.also { it.valuesFrom(model, call.identity!!.asEntity()) }
+                        ?.also { it.valuesFrom(model, call.identity!!.asEntity()) }?.asViewModel()
                     else -> null
                 }
             }
@@ -99,7 +99,7 @@ fun Route.collectionRoutes() {
                     call.response.status(HttpStatusCode.Conflict)
                     call.respond("category does not exist or user is not creator")
                 }
-                else -> call.respond(collection.asViewModel())
+                else -> call.respond(collection)
             }
         }
 
