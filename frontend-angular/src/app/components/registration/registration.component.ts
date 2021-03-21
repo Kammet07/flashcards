@@ -21,7 +21,7 @@ export class RegistrationComponent {
   }
 
   register(): void {
-    this.httpClient.post<UserEntity>('http://192.168.0.165:8080/api/user', {
+    this.httpClient.post<UserEntity>('/api/user', {
       username: this.username,
       password: this.password,
       mail: this.mail

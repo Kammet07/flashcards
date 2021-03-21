@@ -27,7 +27,7 @@ export class CollectionsComponent {
     if (!this.user) {
       this.toastr.error('Not authorised!');
     } else {
-      this.httpClient.post<CollectionEntity>('http://192.168.0.165:8080/api/collection', {
+      this.httpClient.post<CollectionEntity>('/api/collection', {
         category: this.category,
         public: this.public,
         creatorId: this.user.id

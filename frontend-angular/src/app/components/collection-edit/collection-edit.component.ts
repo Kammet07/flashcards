@@ -27,7 +27,7 @@ export class CollectionEditComponent {
     } else if (!this.collectionEdit) {
       this.toastr.error('Something went wrong');
     } else {
-      this.httpClient.put<CollectionEntity>(`http://192.168.0.165:8080/api/collection/${this.collectionEdit.id}`, {
+      this.httpClient.put<CollectionEntity>(`/api/collection/${this.collectionEdit.id}`, {
         category: this.collectionEdit.category,
         public: this.collectionEdit.public,
         creatorId: this.user.id

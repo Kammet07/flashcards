@@ -24,19 +24,19 @@ export class AppComponent {
     private readonly httpClient: HttpClient,
     private readonly toastr: ToastrService
   ) {
-    httpClient.get<UserEntity>('http://192.168.0.165:8080/api/authentication', {withCredentials: true}).subscribe(response => this.user = response);
+    httpClient.get<UserEntity>('/api/authentication', {withCredentials: true}).subscribe(response => this.user = response);
     this.loadCollections();
   }
 
   logout(): void {
-    this.httpClient.delete('http://192.168.0.165:8080/api/authentication', {withCredentials: true}).subscribe(() => {
+    this.httpClient.delete('/api/authentication', {withCredentials: true}).subscribe(() => {
       this.user = null;
       this.toastr.success('Logged out');
     });
   }
 
   private loadCollections(): void {
-    this.httpClient.get<CollectionEntity[]>('http://192.168.0.165:8080/api/collection')
+    this.httpClient.get<CollectionEntity[]>('/api/collection')
       .subscribe(response => {
         this.collections = new Set(response);
       }, error => {
@@ -46,7 +46,7 @@ export class AppComponent {
   }
 
   deleteCollection(collection: CollectionEntity): void {
-    this.httpClient.delete(`http://192.168.0.165:8080/api/collection/${collection.id}`, {withCredentials: true, responseType: 'text'})
+    this.httpClient.delete(`/api/collection/${collection.id}`, {withCredentials: true, responseType: 'text'})
       .subscribe(() => {
         this.toastr.success('Collection has been removed');
         this.collections?.delete(collection);

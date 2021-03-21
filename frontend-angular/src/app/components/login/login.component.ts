@@ -21,7 +21,7 @@ export class LoginComponent {
   }
 
   login(): void {
-    this.httpClient.post<UserEntity>('http://192.168.0.165:8080/api/authentication', {
+    this.httpClient.post<UserEntity>('/api/authentication', {
       username: this.username,
       password: this.password
     })
