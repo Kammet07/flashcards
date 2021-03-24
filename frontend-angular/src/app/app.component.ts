@@ -40,7 +40,6 @@ export class AppComponent {
       .subscribe(response => {
         this.collections = new Set(response);
       }, error => {
-        console.error(error);
         this.toastr.error('Something went wrong while getting collections', error.status);
       });
   }
@@ -51,7 +50,6 @@ export class AppComponent {
         this.toastr.success('Collection has been removed');
         this.collections?.delete(collection);
       }, error => {
-        console.error(error);
         this.toastr.warning(error.statusText, error.status);
       });
   }

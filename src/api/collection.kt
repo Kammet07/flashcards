@@ -56,8 +56,6 @@ fun Route.collectionRoutes() {
     authenticate {
         /**
          * create collection
-         *
-         * TODO: instead of getting id, define it trough identity
          */
         post<CollectionLocation> {
             val model = call.receive<ICollectionModel.Create>().also { it.validate() }

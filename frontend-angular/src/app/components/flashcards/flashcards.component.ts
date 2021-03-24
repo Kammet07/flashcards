@@ -47,10 +47,7 @@ export class FlashcardsComponent {
     } else {
       this.httpClient.get<FlashcardEntity[]>(`/api/collection/${collection.id}`, {withCredentials: true})
         .subscribe(response => {
-          console.log(response);
           this.flashcards = response;
-        }, error => {
-          console.error(error);
         });
     }
   }
@@ -63,13 +60,11 @@ export class FlashcardsComponent {
         term: this.createTerm,
         definition: this.createDefinition,
       }, {withCredentials: true}).subscribe(response => {
-        console.log(response);
         this.flashcards.push(response);
         this.toastr.success(`Flashcard ${response.term} successfully added`);
         this.createTerm = '';
         this.createDefinition = '';
       }, error => {
-        console.error(error);
         this.toastr.error(error.statusText, error.status);
       });
     } else {
@@ -86,11 +81,9 @@ export class FlashcardsComponent {
         term: this.editTerm,
         definition: this.editDefinition
       }, {withCredentials: true}).subscribe(response => {
-        console.log(response);
         this.toastr.success(`Flashcard ${response.term} successfully edited`);
         this.flashcards[this.activeFlashcardIndex] = response;
       }, error => {
-        console.error(error);
         this.toastr.error(error.statusText, error.status);
       });
     } else {

@@ -28,9 +28,6 @@ export class LoginComponent {
       .subscribe(response => {
         this.userLoginChanged.emit(response);
         this.toastr.success('Logged In');
-      }, error => {
-        console.error(error);
-        this.toastr.error('Wrong username or password');
       });
   }
 }

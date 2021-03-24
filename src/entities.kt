@@ -99,7 +99,6 @@ class CollectionEntity(id: EntityID<Long>) : Entity<Long>(id) {
 
         fun wasCreatedByUser(id: Long, creatorId: Long) =
             find { (Table.id eq id).and(Table.creator eq creatorId) }.empty().not()
-        // find { (Table.id eq id).and(Table.creatorId eq creatorId) }.empty().not()
     }
 }
 
@@ -113,10 +112,7 @@ class FlashcardEntity(id: EntityID<Long>) : Entity<Long>(id) {
     object Table : LongIdTable("flashcards") {
         const val MAX_TEXT_LENGTH = 255
 
-
-        // val collectionId = long("collection_id").references(CollectionEntity.Table.id)
         val collection = reference("collection_id", CollectionEntity.Table)
-
         val term = varchar("term", MAX_TEXT_LENGTH)
         val definition = varchar("definition", MAX_TEXT_LENGTH)
 

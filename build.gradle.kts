@@ -42,15 +42,12 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.hibernate.validator:hibernate-validator:6.1.1.Final")
     implementation("org.glassfish:javax.el:3.0.0")
-
 }
-
 
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
 
 sourceSets["main"].resources.srcDirs("resources")
-
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"

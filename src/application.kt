@@ -28,10 +28,10 @@ fun Application.module() {
     connectToDb()
     //if doesn't exist, creates schema
     transaction {
-        SchemaUtils.createDatabase("test")
+        SchemaUtils.createDatabase("flashcards")
     }
     //connects to created/existing db
-    connectToDb("test")
+    connectToDb("flashcards")
     //transactions in created db
     transaction {
         //creates missing tables
@@ -95,7 +95,6 @@ fun Application.module() {
     }
 }
 
-// TODO: move to property file?
 fun connectToDb(dbName: String? = null): Database = Database.connect(
     "jdbc:mysql://127.0.0.1:3306/${dbName.orEmpty()}?characterEncoding=utf8&useUnicode=true",
     "org.mariadb.jdbc.Driver",

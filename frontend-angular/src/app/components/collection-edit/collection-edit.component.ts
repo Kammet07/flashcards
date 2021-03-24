@@ -35,7 +35,6 @@ export class CollectionEditComponent {
         this.collectionEdit = response;
         this.toastr.success('Collection was successfully edited!');
       }, error => {
-        console.error(error);
         this.toastr.error('Collection edit went wrong', error.status);
       });
     }

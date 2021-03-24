@@ -35,7 +35,6 @@ export class CollectionsComponent {
         this.toastr.success(`Collection ${response.category} was created`);
         this.createdCollection.emit(response);
       }, error => {
-        console.error(error);
         this.toastr.error('Collection creation went wrong', error.status);
       });
     }
