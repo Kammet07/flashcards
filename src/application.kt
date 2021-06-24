@@ -3,6 +3,7 @@ package com.kammet.flashcards.backend
 import com.kammet.flashcards.backend.api.UserIdentity
 import com.kammet.flashcards.backend.api.apiRouting
 import com.kammet.flashcards.backend.api.identity
+import io.github.cdimascio.dotenv.dotenv
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
@@ -95,9 +96,11 @@ fun Application.module() {
     }
 }
 
+val dotenv = dotenv()
+
 fun connectToDb(dbName: String? = null): Database = Database.connect(
     "jdbc:mysql://127.0.0.1:3306/${dbName.orEmpty()}?characterEncoding=utf8&useUnicode=true",
     "org.mariadb.jdbc.Driver",
-    "card",
-    "flashcards135"
+    dotenv["DB_USERNAME"],
+    dotenv["DB_PASSWORD"]
 )
