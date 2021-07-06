@@ -1,0 +1,35 @@
+services:
+
+  db:
+    container_name: flashcards-db
+    image: mariadb
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./db-data:/var/lib/mysql
+    networks:
+      - flashcards
+#    ports:
+#      - 3306:3306
+#    expose:
+#      - 3306
+
+  app:
+    container_name: flashcards-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    networks:
+      - flashcards
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+networks:
+  flashcards:
+    driver: bridge

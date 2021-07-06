@@ -7,6 +7,7 @@
 *.ipr
 *.iws
 .env
+/db-data
 
 .gradle
 **/build/

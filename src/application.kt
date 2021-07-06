@@ -99,8 +99,8 @@ fun Application.module() {
 val dotenv = dotenv()
 
 fun connectToDb(dbName: String? = null): Database = Database.connect(
-    "jdbc:mysql://127.0.0.1:3306/${dbName.orEmpty()}?characterEncoding=utf8&useUnicode=true",
+    "jdbc:mysql://db:3306/${dbName.orEmpty()}?characterEncoding=utf8&useUnicode=true",
     "org.mariadb.jdbc.Driver",
-    dotenv["DB_USERNAME"],
-    dotenv["DB_PASSWORD"]
+    dotenv["MARIADB_USER"],
+    dotenv["MARIADB_PASSWORD"]
 )
