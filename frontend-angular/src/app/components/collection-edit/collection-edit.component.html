@@ -1,21 +1,22 @@
 <div *ngIf="collectionEdit !== null">
-  <form (ngSubmit)="editCollection()">
-    <div class="field">
-      <label class="label" for="category">Category</label>
-      <div class="control">
-        <input class="input" type="text" placeholder="Category" id="category"
-               [(ngModel)]="collectionEdit.category" name="category" [value]="">
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label for="public" class="checkbox">
-          <input type="checkbox" id="public" name="public" [(ngModel)]="collectionEdit.public" [value]="collectionEdit.public">
-          I wish my collection to be public.
-        </label>
-      </div>
-    </div>
+    <form (ngSubmit)="editCollection()">
+        <div class="field">
+            <label class="label" for="category">Category</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="Category" id="category"
+                       [(ngModel)]="collectionEdit.category" name="category" [value]="">
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <label for="public" class="checkbox">
+                    <input type="checkbox" id="public" name="public" [(ngModel)]="collectionEdit.public"
+                           [value]="collectionEdit.public">
+                    I wish my collection to be public.
+                </label>
+            </div>
+        </div>
 
-    <button class="button">Edit collection</button>
-  </form>
+        <button class="button">Edit collection</button>
+    </form>
 </div>

@@ -1,19 +1,19 @@
 <form (ngSubmit)="createCollection()">
-  <div class="field">
-    <label class="label" for="category">Category</label>
-    <div class="control">
-      <input class="input" type="text" placeholder="Category" id="category"
-             [(ngModel)]="category" name="category">
+    <div class="field">
+        <label class="label" for="category">Category</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="Category" id="category"
+                   [(ngModel)]="category" name="category">
+        </div>
     </div>
-  </div>
-  <div class="field">
-    <div class="control">
-      <label for="public" class="checkbox">
-        <input type="checkbox" id="public" name="public" [(ngModel)]="public">
-        I wish my collection to be public.
-      </label>
+    <div class="field">
+        <div class="control">
+            <label for="public" class="checkbox">
+                <input type="checkbox" id="public" name="public" [(ngModel)]="public">
+                I wish my collection to be public.
+            </label>
+        </div>
     </div>
-  </div>
 
-  <button class="button">Create collection</button>
+    <button class="button">Create collection</button>
 </form>

@@ -7,7 +7,7 @@ val exposed_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.5.21"
 }
 
 group = "com.kammet.flashcards.backend"
@@ -46,12 +46,10 @@ dependencies {
     implementation("org.glassfish:javax.el:3.0.0")
 }
 
-
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
 
 sourceSets["main"].resources.srcDirs("resources")
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
     kotlinOptions.freeCompilerArgs += "-Xuse-experimental=io.ktor.locations.KtorExperimentalLocationsAPI"
 }
